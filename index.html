@@ -1,0 +1,1160 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BIG HANDS Intelligence (Static)</title>
+
+  <!-- Fonts (원본 컨셉 유지: Inter + Mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg: #FBFBFC;
+      --text: #334155;
+      --muted: #94a3b8;
+      --border: #e2e8f0;
+      --card: #ffffff;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --shadow-soft: 0 6px 18px rgba(15, 23, 42, 0.06);
+
+      /* theme variables (buy/sell로 바뀜) */
+      --themeDark: #0F172A;
+      --themeAccent: #ea580c; /* buy default: orange-600 */
+      --themeAccentSoft: rgba(234, 88, 12, 0.10);
+      --danger: #e11d48;
+      --ok: #10b981;
+      --link: #2563eb;
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .mono{ font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-variant-numeric: tabular-nums; }
+    .container{ max-width: 1600px; margin: 0 auto; padding: 0 24px; }
+    .topbar{
+      background: var(--themeDark);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 10px 0;
+    }
+    .topbar .row{ display:flex; justify-content: space-between; align-items:center; gap:16px; }
+    .dot{ width:6px; height:6px; border-radius:999px; background: var(--ok); display:inline-block; margin-right:8px; }
+    .topbar .right a{ color: rgba(255,255,255,0.75); text-decoration:none; margin-left:18px; }
+    .topbar .right a:hover{ color:#fff; }
+
+    header{
+      position: sticky; top:0; z-index: 30;
+      background: var(--card);
+      border-bottom: 1px solid rgba(226,232,240,0.6);
+    }
+    header .row{
+      height: 64px;
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 16px;
+    }
+
+    .brand{ display:flex; align-items:center; gap:12px; cursor:pointer; user-select:none; }
+    .logo{
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--themeDark);
+      display:flex; align-items:center; justify-content:center;
+      color:#fff;
+      box-shadow: 0 6px 14px rgba(15,23,42,0.18);
+      font-weight: 900;
+    }
+    .brandname{
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: #0f172a;
+      font-size: 18px;
+      line-height: 1;
+    }
+    .brandname span{ color: var(--themeAccent); }
+
+    .nav{ display:none; gap: 28px; font-size: 13px; font-weight: 700; color: #94a3b8; }
+    .nav a{ color: inherit; text-decoration:none; padding: 22px 0; border-bottom: 2px solid transparent; }
+    .nav a.active{ color:#0f172a; border-bottom-color:#0f172a; }
+    .nav a:hover{ color:#0f172a; }
+    @media (min-width: 1280px){
+      .nav{ display:flex; }
+    }
+
+    .actions{ display:flex; align-items:center; gap: 12px; }
+    .searchwrap{ position: relative; display:none; }
+    @media (min-width: 768px){
+      .searchwrap{ display:block; }
+    }
+    .searchwrap input{
+      background: #f8fafc;
+      border: 1px solid rgba(226,232,240,0.8);
+      border-radius: 10px;
+      padding: 8px 12px 8px 34px;
+      font-size: 13px;
+      width: 180px;
+      outline: none;
+      transition: width 200ms ease, background 200ms ease;
+    }
+    .searchwrap input:focus{
+      background: #fff;
+      width: 260px;
+    }
+    .searchicon{
+      position:absolute; left: 10px; top: 9px;
+      font-size: 12px; color: #cbd5e1;
+    }
+
+    .btn{
+      border: 1px solid rgba(226,232,240,0.8);
+      background: #f8fafc;
+      color:#0f172a;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      cursor:pointer;
+    }
+    .btn:hover{ background:#fff; }
+    .btn.pro{
+      background: var(--themeAccent);
+      border-color: transparent;
+      color:#fff;
+      padding: 10px 16px;
+      box-shadow: 0 14px 30px rgba(37,99,235,0.0);
+    }
+    .btn.pro:hover{ filter: brightness(1.05); }
+    .btn.icon{ padding: 10px 12px; font-size: 16px; line-height: 1; }
+
+    main{ padding: 32px 0; }
+    .layout{ display:flex; flex-direction:column; gap: 24px; align-items: stretch; }
+    @media (min-width: 1024px){
+      .layout{ flex-direction: row; align-items: flex-start; }
+      .left{ width: 70%; }
+      .right{ width: 30%; position: sticky; top: 96px; }
+    }
+
+    .controls{
+      display:flex; flex-wrap: wrap; gap: 12px;
+      justify-content: space-between; align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .seg{
+      display:flex; gap: 6px;
+      background: rgba(226,232,240,0.7);
+      border-radius: 14px;
+      padding: 6px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+    .seg button{
+      border:0;
+      cursor:pointer;
+      background: transparent;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #94a3b8;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+    }
+    .seg button.active{
+      background:#fff;
+      color: var(--themeAccent);
+      box-shadow: 0 6px 16px rgba(15,23,42,0.06);
+    }
+
+    .chips{
+      display:flex;
+      gap: 6px;
+      padding: 4px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid rgba(226,232,240,0.7);
+    }
+    .chips button{
+      border:0;
+      cursor:pointer;
+      background: transparent;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+    .chips button.active{
+      background:#fff;
+      color:#0f172a;
+      box-shadow: 0 1px 0 rgba(15,23,42,0.04);
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid rgba(226,232,240,0.7);
+      border-radius: 18px;
+      box-shadow: var(--shadow-soft);
+    }
+    .hero{
+      padding: 16px 16px;
+      display:flex; justify-content: space-between; align-items: center; gap: 12px;
+      margin-bottom: 12px;
+    }
+    .hero .leftside{ display:flex; align-items:center; gap: 14px; }
+    .herobadge{
+      width: 44px; height: 44px; border-radius: 14px;
+      background: rgba(15, 23, 42, 0.04);
+      border: 1px solid rgba(226,232,240,0.6);
+      display:flex; align-items:center; justify-content:center;
+      font-weight: 900;
+      color: var(--themeAccent);
+    }
+    .hero h2{
+      margin:0;
+      font-size: 18px;
+      font-weight: 900;
+      color: #1f2937;
+      letter-spacing: -0.02em;
+    }
+    .sub{
+      margin-top: 3px;
+      font-size: 10px;
+      font-weight: 900;
+      color: #cbd5e1;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .btn.small{
+      padding: 8px 10px;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: none;
+      border-radius: 10px;
+    }
+
+    .tablewrap{ overflow:auto; border-top-left-radius: 18px; border-top-right-radius: 18px; }
+    table{ width: 100%; min-width: 760px; border-collapse: collapse; }
+    thead th{
+      background:#f8fafc;
+      color:#cbd5e1;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 16px;
+      border-bottom: 1px solid rgba(226,232,240,0.7);
+      text-align:left;
+    }
+    tbody td{
+      padding: 16px;
+      border-bottom: 1px solid rgba(226,232,240,0.35);
+      vertical-align: middle;
+    }
+    tbody tr{ cursor:pointer; transition: background 120ms ease; }
+    tbody tr:hover{ background: rgba(226,232,240,0.22); }
+    tbody tr.selected{
+      background: var(--themeAccentSoft);
+      border-left: 4px solid var(--themeAccent);
+    }
+    .rank{ text-align:center; color:#e2e8f0; font-weight: 900; }
+    .ticker{ font-weight: 900; font-size: 14px; color:#334155; }
+    .pill{
+      display:inline-flex; align-items:center; justify-content:center;
+      width: 18px; height: 18px;
+      border-radius: 6px;
+      font-size: 9px; font-weight: 900;
+      margin-left: 8px;
+      text-transform: uppercase;
+    }
+    .pill.long{ background:#0f172a; color:#fff; }
+    .pill.short{ background:#e2e8f0; color:#475569; }
+    .name{ font-size: 10px; font-weight: 800; color:#cbd5e1; letter-spacing: 0.08em; text-transform: uppercase; max-width: 240px; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+    .holders .delta{ margin-left: 10px; font-size: 11px; font-weight: 900; opacity: 0.8; }
+    .up{ color: var(--ok); }
+    .down{ color: var(--danger); }
+    .rating{
+      width: 34px; height: 34px; border-radius: 10px;
+      display:flex; align-items:center; justify-content:center;
+      font-size: 11px; font-weight: 900;
+      border: 1px solid rgba(226,232,240,0.8);
+      margin: 0 auto;
+    }
+    .rating.a{ background: var(--ok); color:#fff; border-color: var(--ok); }
+    .rating.b{ background: rgba(16,185,129,0.08); color: var(--ok); border-color: rgba(16,185,129,0.22); }
+    .rating.other{ background: #f8fafc; color:#cbd5e1; border-color: rgba(226,232,240,0.8); }
+
+    /* Right panel */
+    .panel{
+      overflow:hidden;
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    .panelHead{
+      padding: 22px;
+      background: var(--themeDark);
+      color:#fff;
+      position: relative;
+    }
+    .panelHead h3{
+      margin:0;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+    .panelHead .trend{
+      margin-top: 6px;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.9);
+      font-style: italic;
+    }
+    .close{
+      position:absolute; right: 14px; top: 12px;
+      width: 34px; height: 34px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.8);
+      cursor:pointer;
+    }
+    .close:hover{ background: rgba(255,255,255,0.12); }
+
+    .panelBody{ padding: 22px; }
+    .grid3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .mini{
+      border-radius: 16px;
+      border: 1px solid rgba(226,232,240,0.7);
+      background: rgba(248,250,252,0.7);
+      padding: 12px;
+      text-align:center;
+    }
+    .mini .k{ font-size: 9px; font-weight: 900; color:#cbd5e1; letter-spacing: 0.16em; text-transform: uppercase; }
+    .mini .v{ margin-top: 8px; font-size: 14px; font-weight: 900; color:#475569; }
+
+    .section{ margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(226,232,240,0.6); }
+    .rowBetween{ display:flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .live{
+      font-size: 10px; font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color:#cbd5e1;
+      display:flex; align-items:center;
+    }
+    .pulse{
+      width: 8px; height: 8px; border-radius: 999px;
+      background: var(--ok);
+      display:inline-block;
+      margin-right: 8px;
+      box-shadow: 0 0 0 0 rgba(16,185,129,0.35);
+      animation: pulse 1.6s infinite;
+    }
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(16,185,129,0.35); }
+      70%{ box-shadow: 0 0 0 10px rgba(16,185,129,0.0); }
+      100%{ box-shadow: 0 0 0 0 rgba(16,185,129,0.0); }
+    }
+    .price{ font-size: 28px; font-weight: 600; color:#334155; margin-top: 6px; }
+    .badge{
+      border-radius: 12px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 900;
+      border: 1px solid rgba(226,232,240,0.7);
+      background: rgba(248,250,252,0.9);
+    }
+    .badge.good{ color: var(--ok); background: rgba(16,185,129,0.10); border-color: rgba(16,185,129,0.22); }
+    .badge.bad{ color: var(--danger); background: rgba(225,29,72,0.10); border-color: rgba(225,29,72,0.20); }
+
+    .biglabel{ font-size: 10px; font-weight: 900; color:#cbd5e1; letter-spacing: 0.16em; text-transform: uppercase; }
+    .target{ font-size: 34px; font-weight: 600; color: var(--link); margin-top: 6px; }
+    .muted{ color:#94a3b8; }
+    .sliderRow{ margin-top: 12px; }
+    input[type="range"]{ width:100%; }
+
+    .cta{
+      margin-top: 14px;
+      width:100%;
+      border:0;
+      border-radius: 18px;
+      background: #0f172a;
+      color:#fff;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 16px 14px;
+      cursor:pointer;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.18);
+    }
+    .cta:hover{ background:#111827; }
+    .holdersTitle{
+      display:flex; align-items:center; gap: 8px;
+      font-size: 10px; font-weight: 900;
+      color:#94a3b8; letter-spacing: 0.16em; text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .holderItem{
+      display:flex; justify-content: space-between; align-items: center;
+      padding: 10px 10px;
+      border-radius: 16px;
+      border: 1px solid rgba(226,232,240,0.6);
+      background: rgba(248,250,252,0.7);
+      margin-bottom: 10px;
+      transition: background 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+    }
+    .holderItem:hover{
+      background:#fff;
+      box-shadow: 0 10px 26px rgba(15,23,42,0.06);
+      transform: translateY(-1px);
+    }
+    .holderName{
+      font-size: 11px; font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      color:#334155;
+      max-width: 190px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .holderType{ font-size: 10px; font-weight: 800; margin-top: 4px; }
+    .tLong{ color: var(--ok); }
+    .tShort{ color: #f59e0b; }
+
+    .status{
+      font-size: 10px; font-weight: 900;
+      padding: 6px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(226,232,240,0.7);
+      background: rgba(248,250,252,0.9);
+    }
+    .stNew{ color: var(--link); background: rgba(37,99,235,0.12); border-color: rgba(37,99,235,0.20); }
+    .stInc{ color: var(--ok); background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.22); }
+    .stDec{ color: var(--danger); background: rgba(225,29,72,0.10); border-color: rgba(225,29,72,0.20); }
+    .stMaint{ color: #64748b; background: rgba(100,116,139,0.12); border-color: rgba(100,116,139,0.22); }
+
+    footer{
+      border-top: 1px solid rgba(226,232,240,0.5);
+      margin-top: 34px;
+      padding: 34px 0;
+      color:#94a3b8;
+      font-size: 11px;
+    }
+    footer .row{ display:flex; flex-direction: column; gap: 10px; align-items: center; text-align:center; }
+    @media (min-width: 768px){
+      footer .row{ flex-direction: row; justify-content: space-between; text-align:left; }
+    }
+    footer a{ color:#94a3b8; text-decoration:none; font-weight: 800; }
+    footer a:hover{ color:#0f172a; }
+
+    .hide{ display:none !important; }
+  </style>
+</head>
+
+<body>
+  <!-- Top Utility Nav -->
+  <div class="topbar">
+    <div class="container">
+      <div class="row">
+        <div>
+          <span class="dot"></span><span>Network: Connected</span>
+          <span style="margin-left:14px; color: rgba(148,163,184,0.85); font-weight:800; letter-spacing: 0.06em; font-style: italic;">Big Hands Activity Tracking</span>
+        </div>
+        <div class="right" style="display:none;">
+          <a href="#">Insights</a>
+          <a href="#">Market Data</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Header -->
+  <header>
+    <div class="container">
+      <div class="row">
+        <div style="display:flex; align-items:center; gap: 18px;">
+          <div class="brand" id="brand">
+            <div class="logo">BH</div>
+            <div class="brandname">BIG<span>HANDS</span></div>
+          </div>
+
+          <nav class="nav">
+            <a href="#" class="active">Whale Consensus</a>
+            <a href="#">Investors</a>
+            <a href="#">Institutional Lab</a>
+          </nav>
+        </div>
+
+        <div class="actions">
+          <button class="btn icon" id="togglePanel" title="Toggle Panel">⟷</button>
+
+          <div class="searchwrap">
+            <span class="searchicon">⌕</span>
+            <input id="search" type="text" placeholder="Search Tickers..." />
+          </div>
+
+          <button class="btn pro" id="proBtn">PRO ACCESS</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="layout">
+      <!-- Left -->
+      <section class="left">
+        <div class="controls">
+          <div class="seg">
+            <button id="btnBuy" class="active" type="button">▲ Top Buys</button>
+            <button id="btnSell" type="button">▼ Top Sells</button>
+          </div>
+
+          <div class="chips">
+            <button id="fltAll" class="active" type="button">all</button>
+            <button id="fltLong" type="button">long</button>
+            <button id="fltShort" type="button">short</button>
+          </div>
+        </div>
+
+        <div class="card hero">
+          <div class="leftside">
+            <div class="herobadge">✋</div>
+            <div>
+              <div class="sub">Big Hands Intelligence</div>
+              <h2 id="headline">BUY Momentum: ALL Institutional Consensus</h2>
+            </div>
+          </div>
+          <button class="btn small" id="expandHint" type="button">Expand Analysis</button>
+        </div>
+
+        <div class="card">
+          <div class="tablewrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:70px; text-align:center;">#</th>
+                  <th>Stock Symbol</th>
+                  <th>Whale Activity (T / + / -)</th>
+                  <th style="text-align:center;">Avg. Cost</th>
+                  <th style="text-align:center;">Fair Value</th>
+                  <th style="text-align:center;">Rating</th>
+                </tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right -->
+      <aside class="right" id="panelWrap">
+        <div class="card panel">
+          <div class="panelHead">
+            <button class="close" id="closePanel" title="Close">×</button>
+            <h3 id="pTicker">GOOGL Analyst</h3>
+            <div class="trend" id="pTrend">Bullish Consensus</div>
+          </div>
+
+          <div class="panelBody">
+            <div class="grid3">
+              <div class="mini">
+                <div class="k">Value</div>
+                <div class="v" id="gValue">A-</div>
+              </div>
+              <div class="mini">
+                <div class="k">Growth</div>
+                <div class="v" id="gGrowth">B+</div>
+              </div>
+              <div class="mini">
+                <div class="k">Safety</div>
+                <div class="v">A+</div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="rowBetween">
+                <div>
+                  <div class="live"><span class="pulse"></span>Live Market Price</div>
+                  <div class="price mono" id="pPrice">$0.00</div>
+                </div>
+                <div class="badge mono" id="pUpside">▲ 0.0%</div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="biglabel">Intrinsic Target</div>
+              <div class="target mono" id="pTarget">$0.00</div>
+
+              <div class="sliderRow">
+                <div class="rowBetween" style="align-items:center;">
+                  <div class="biglabel" style="letter-spacing:0.06em;">P/E Multiple Adjustment</div>
+                  <div class="badge mono" id="pPE">0x</div>
+                </div>
+                <input id="peSlider" type="range" min="-100" max="150" step="0.5" value="0">
+                <div class="muted" style="font-size:12px; margin-top: 8px;">
+                  EPS × P/E = Target. Slider를 움직이면 Target과 Upside가 즉시 계산됩니다.
+                </div>
+              </div>
+
+              <button class="cta" id="ctaBtn" type="button">Set Watchlist</button>
+            </div>
+
+            <div class="section">
+              <div class="holdersTitle">👥 Top Big Hands Holders</div>
+              <div id="holders"></div>
+              <button class="btn small" type="button" style="width:100%;">All Holders Details →</button>
+            </div>
+
+            <div class="section" id="debugBox" style="display:none;">
+              <div class="biglabel">Debug</div>
+              <div class="mono" id="debugText" style="font-size:12px; color:#94a3b8; margin-top:8px;"></div>
+            </div>
+
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+      <div class="row">
+        <div style="display:flex; align-items:center; gap: 10px;">
+          <div class="logo" style="width:28px; height:28px; border-radius: 8px;">BH</div>
+          <div style="font-weight: 900; color:#0f172a; letter-spacing:-0.02em; text-transform: uppercase;">BIG HANDS INTELLIGENCE</div>
+        </div>
+        <div style="font-weight: 900; letter-spacing: 0.14em; text-transform: uppercase; font-size: 10px;">
+          Tracking Smart Money Movements via 13F Quantitative Analysis.
+        </div>
+        <div style="display:flex; gap: 16px;">
+          <a href="#">Disclaimer</a>
+          <a href="#">Contact</a>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <script>
+  /**
+   * BIG HANDS Static UI — Real JSON Connector (Vercel-safe)
+   *
+   * 기대 파일:
+   *   top5_long.json
+   *   top5_short.json
+   *
+   * 가장 안전한 배치:
+   *   public/index.html
+   *   public/top5_long.json
+   *   public/top5_short.json
+   */
+
+  // ===== Data State =====
+  let STOCKS = [];
+  let META = {
+    long: { investors_used: 0 },
+    short: { investors_used: 0 },
+  };
+
+  // ===== UI State =====
+  let tradeType = "buy";       // 'buy' | 'sell'
+  let investorType = "all";    // 'all' | 'long' | 'short'
+  let selected = null;
+  let peMultiple = 0;
+
+  // ===== DOM =====
+  const rowsEl = document.getElementById("rows");
+  const searchEl = document.getElementById("search");
+
+  const btnBuy = document.getElementById("btnBuy");
+  const btnSell = document.getElementById("btnSell");
+  const fltAll = document.getElementById("fltAll");
+  const fltLong = document.getElementById("fltLong");
+  const fltShort = document.getElementById("fltShort");
+
+  const headline = document.getElementById("headline");
+
+  const panelWrap = document.getElementById("panelWrap");
+  const togglePanel = document.getElementById("togglePanel");
+  const closePanel = document.getElementById("closePanel");
+  const expandHint = document.getElementById("expandHint");
+
+  const pTicker = document.getElementById("pTicker");
+  const pTrend = document.getElementById("pTrend");
+  const gValue = document.getElementById("gValue");
+  const gGrowth = document.getElementById("gGrowth");
+  const pPrice = document.getElementById("pPrice");
+  const pUpside = document.getElementById("pUpside");
+  const pTarget = document.getElementById("pTarget");
+  const pPE = document.getElementById("pPE");
+  const peSlider = document.getElementById("peSlider");
+  const ctaBtn = document.getElementById("ctaBtn");
+  const holders = document.getElementById("holders");
+
+  const debugBox = document.getElementById("debugBox");
+  const debugText = document.getElementById("debugText");
+
+  // ===== Helpers =====
+  function debugLog(lines) {
+    // 필요하면 true로 바꿔서 배포 환경에서 경로 확인 가능
+    const ENABLE_DEBUG = false;
+    if (!ENABLE_DEBUG) return;
+    debugBox.style.display = "block";
+    debugText.innerHTML = lines.map(l => `<div>${escapeHtml(l)}</div>`).join("");
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (m) => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
+    }[m]));
+  }
+
+  function setTheme() {
+    if (tradeType === "buy") {
+      document.documentElement.style.setProperty("--themeDark", "#0F172A");
+      document.documentElement.style.setProperty("--themeAccent", "#ea580c");
+      document.documentElement.style.setProperty("--themeAccentSoft", "rgba(234, 88, 12, 0.10)");
+      ctaBtn.textContent = "Set Watchlist";
+    } else {
+      document.documentElement.style.setProperty("--themeDark", "#450A0A");
+      document.documentElement.style.setProperty("--themeAccent", "#e11d48");
+      document.documentElement.style.setProperty("--themeAccentSoft", "rgba(225, 29, 72, 0.10)");
+      ctaBtn.textContent = "Set Exit Point";
+    }
+  }
+
+  function ratingClass(value) {
+    if (!value) return "other";
+    if (value.startsWith("A")) return "a";
+    if (value.startsWith("B")) return "b";
+    return "other";
+  }
+
+  function fmtMoney(n) {
+    const x = Number(n);
+    if (!isFinite(x)) return "$0.00";
+    return "$" + x.toFixed(2);
+  }
+
+  function safeNumber(n, fallback = 0) {
+    const x = Number(n);
+    return isFinite(x) ? x : fallback;
+  }
+
+  function computeTarget(stock, pe) {
+    const eps = safeNumber(stock.eps, 0);
+    const cur = safeNumber(stock.currentPrice, 0);
+    const target = eps * safeNumber(pe, 0);
+    const upside = cur > 0 ? ((target - cur) / cur) * 100 : 0;
+    return { target, upside };
+  }
+
+  function renderLoading(msg = "Loading data...") {
+    rowsEl.innerHTML = `
+      <tr>
+        <td colspan="6" class="mono" style="padding:18px; color:#94a3b8; text-align:center;">
+          ${msg}
+        </td>
+      </tr>
+    `;
+  }
+
+  function renderError(msg) {
+    rowsEl.innerHTML = `
+      <tr>
+        <td colspan="6" class="mono" style="padding:18px; color:#e11d48; text-align:center;">
+          ${escapeHtml(msg)}
+        </td>
+      </tr>
+    `;
+  }
+
+  function renderHeadline() {
+    headline.textContent = `${tradeType.toUpperCase()} Momentum: ${investorType.toUpperCase()} Institutional Consensus`;
+  }
+
+  function syncButtons() {
+    btnBuy.classList.toggle("active", tradeType === "buy");
+    btnSell.classList.toggle("active", tradeType === "sell");
+
+    fltAll.classList.toggle("active", investorType === "all");
+    fltLong.classList.toggle("active", investorType === "long");
+    fltShort.classList.toggle("active", investorType === "short");
+  }
+
+  function filteredStocksRaw() {
+    const q = (searchEl.value || "").trim().toUpperCase();
+    return STOCKS
+      .filter((s) => s.action === tradeType)
+      .filter((s) => (investorType === "all" ? true : s.type === investorType))
+      .filter((s) => (q ? (String(s.ticker).includes(q) || String(s.name).toUpperCase().includes(q)) : true))
+      .slice(0, 5);
+  }
+
+  function pickFirstMatch() {
+    const list = filteredStocksRaw();
+    if (list.length > 0) {
+      selected = list[0];
+      peMultiple = safeNumber(selected.per, 0);
+      peSlider.value = String(peMultiple);
+      return;
+    }
+    selected = null;
+    peMultiple = 0;
+    peSlider.value = "0";
+  }
+
+  function renderTable() {
+    const list = filteredStocksRaw();
+    rowsEl.innerHTML = "";
+
+    if (list.length === 0) {
+      rowsEl.innerHTML = `
+        <tr>
+          <td colspan="6" class="mono" style="padding:18px; color:#94a3b8; text-align:center;">
+            No rows (check filters or JSON path).
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    list.forEach((stock, idx) => {
+      const tr = document.createElement("tr");
+      if (selected && selected.ticker === stock.ticker) tr.classList.add("selected");
+
+      tr.addEventListener("click", () => {
+        selected = stock;
+        peMultiple = safeNumber(selected.per, 0);
+        peSlider.value = String(peMultiple);
+        renderAll();
+      });
+
+      const tdRank = document.createElement("td");
+      tdRank.className = "rank mono";
+      tdRank.textContent = String(idx + 1);
+
+      const tdSym = document.createElement("td");
+      tdSym.innerHTML = `
+        <div>
+          <div style="display:flex; align-items:center; gap: 8px;">
+            <span class="ticker">${escapeHtml(stock.ticker)}</span>
+            <span class="pill ${stock.type === "long" ? "long" : "short"}">${stock.type === "long" ? "L" : "S"}</span>
+          </div>
+          <div class="name">${escapeHtml(stock.name)}</div>
+        </div>
+      `;
+
+      const tdAct = document.createElement("td");
+      tdAct.innerHTML = `
+        <div class="holders">
+          <span class="mono" style="font-weight:900; color:#475569;">${safeNumber(stock.holders, 0)}</span>
+          <span class="delta mono">
+            <span class="up">+${safeNumber(stock.newHolders, 0)}</span>
+            <span style="margin:0 6px; color:#cbd5e1;">/</span>
+            <span class="down">-${safeNumber(stock.exitHolders, 0)}</span>
+          </span>
+        </div>
+      `;
+
+      const tdAvg = document.createElement("td");
+      tdAvg.className = "mono";
+      tdAvg.style.textAlign = "center";
+      tdAvg.style.color = "#94a3b8";
+      tdAvg.textContent = fmtMoney(stock.avgCost);
+
+      const tdFair = document.createElement("td");
+      tdFair.className = "mono";
+      tdFair.style.textAlign = "center";
+      tdFair.style.color = "rgba(37,99,235,0.75)";
+      tdFair.textContent = fmtMoney(stock.fairValue);
+
+      const tdRate = document.createElement("td");
+      tdRate.style.textAlign = "center";
+      const r = document.createElement("div");
+      const cls = ratingClass(stock.grade?.value);
+      r.className = `rating ${cls}`;
+      r.textContent = stock.grade?.value || "-";
+      tdRate.appendChild(r);
+
+      tr.appendChild(tdRank);
+      tr.appendChild(tdSym);
+      tr.appendChild(tdAct);
+      tr.appendChild(tdAvg);
+      tr.appendChild(tdFair);
+      tr.appendChild(tdRate);
+
+      rowsEl.appendChild(tr);
+    });
+  }
+
+  function renderPanel() {
+    if (!selected) {
+      pTicker.textContent = "No Selection";
+      pTrend.textContent = "—";
+      gValue.textContent = "-";
+      gGrowth.textContent = "-";
+      pPE.textContent = "0.0x";
+      pPrice.textContent = "$0.00";
+      pTarget.textContent = "$0.00";
+      pUpside.className = "badge mono";
+      pUpside.textContent = "▲ 0.0%";
+      holders.innerHTML = "";
+      return;
+    }
+
+    pTicker.textContent = `${selected.ticker} Analyst`;
+    pTrend.textContent = `${selected.trend} Consensus`;
+    gValue.textContent = selected.grade?.value ?? "-";
+    gGrowth.textContent = selected.grade?.growth ?? "-";
+
+    pPE.textContent = `${Number(peMultiple).toFixed(1)}x`;
+    pPrice.textContent = fmtMoney(selected.currentPrice);
+
+    const { target, upside } = computeTarget(selected, peMultiple);
+    pTarget.textContent = fmtMoney(target);
+
+    const isUp = upside >= 0;
+    pUpside.className = `badge mono ${isUp ? "good" : "bad"}`;
+    pUpside.textContent = `${isUp ? "▲" : "▼"} ${Math.abs(upside).toFixed(1)}%`;
+
+    holders.innerHTML = "";
+    (selected.topHolders || []).forEach((h) => {
+      const item = document.createElement("div");
+      item.className = "holderItem";
+
+      const left = document.createElement("div");
+      left.innerHTML = `
+        <div class="holderName">${escapeHtml(h.name)}</div>
+        <div class="holderType ${h.type === "Long" ? "tLong" : "tShort"}">${escapeHtml(h.type)}</div>
+      `;
+
+      const st = document.createElement("div");
+      const map = { New: "stNew", Increased: "stInc", Decreased: "stDec", Maintained: "stMaint" };
+      st.className = `status ${map[h.status] || "stMaint"}`;
+      st.textContent = h.status;
+
+      item.appendChild(left);
+      item.appendChild(st);
+      holders.appendChild(item);
+    });
+  }
+
+  function ensureSelectionVisible() {
+    const list = filteredStocksRaw();
+    if (!selected) {
+      pickFirstMatch();
+      return;
+    }
+    const exists = list.some((s) => s.ticker === selected.ticker);
+    if (!exists) pickFirstMatch();
+  }
+
+  function renderAll() {
+    setTheme();
+    syncButtons();
+    renderHeadline();
+    ensureSelectionVisible();
+    renderTable();
+    renderPanel();
+  }
+
+  // ===== Robust JSON Loader (Vercel-safe) =====
+  function getDirBase() {
+    // 현재 페이지가 /a/b/index.html 이면 /a/b/ 를 base로 사용
+    const p = window.location.pathname || "/";
+    const base = p.endsWith("/") ? p : p.replace(/\/[^\/]*$/, "/");
+    return base;
+  }
+
+  async function fetchJsonTry(url) {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error(`Failed to load ${url} (HTTP ${res.status})`);
+    return await res.json();
+  }
+
+  async function fetchJsonWithFallback(fileName) {
+    const base = getDirBase();
+
+    // 우선순위: 같은 폴더 -> 한 단계 위 -> 루트
+    const candidates = [
+      base + fileName,          // (권장) index.html과 같은 폴더
+      base + "../" + fileName,  // 혹시 index.html이 하위 폴더에 있는 경우
+      "/" + fileName,           // 도메인 루트
+      "./" + fileName,          // 상대경로(브라우저가 알아서 처리)
+    ];
+
+    debugLog([
+      "pathname: " + window.location.pathname,
+      "base: " + base,
+      "try: " + candidates.join(" | "),
+    ]);
+
+    let lastErr = null;
+    for (const url of candidates) {
+      try {
+        return await fetchJsonTry(url);
+      } catch (e) {
+        lastErr = e;
+      }
+    }
+    throw lastErr || new Error(`Failed to load ${fileName}`);
+  }
+
+  /**
+   * tradeType / investorType 에 따라 STOCKS 재구성
+   */
+  async function loadDataAndBuildStocks() {
+    renderLoading("Loading JSON...");
+
+    try {
+      let longJson = null;
+      let shortJson = null;
+
+      if (investorType === "long" || investorType === "all") {
+        longJson = await fetchJsonWithFallback("top5_long.json");
+        META.long.investors_used = safeNumber(longJson.investors_used, 0);
+      }
+      if (investorType === "short" || investorType === "all") {
+        shortJson = await fetchJsonWithFallback("top5_short.json");
+        META.short.investors_used = safeNumber(shortJson.investors_used, 0);
+      }
+
+      const pickList = (json) => {
+        if (!json) return [];
+        if (tradeType === "buy") return json.top5_new_buyers || [];
+        return json.top5_sellers || [];
+      };
+
+      const longList = pickList(longJson).map((r) => ({ ...r, __type: "long" }));
+      const shortList = pickList(shortJson).map((r) => ({ ...r, __type: "short" }));
+
+      let merged = [];
+      if (investorType === "long") merged = longList;
+      else if (investorType === "short") merged = shortList;
+      else merged = [...longList, ...shortList];
+
+      const metric = tradeType === "buy" ? "new_buyers" : "sellers";
+      merged.sort((a, b) => safeNumber(b[metric], 0) - safeNumber(a[metric], 0));
+      merged = merged.slice(0, 5);
+
+      STOCKS = merged.map((row) => {
+        const type = row.__type;
+
+        const holdersCount =
+          safeNumber(row.holders, NaN);
+        const finalHolders = isNaN(holdersCount)
+          ? safeNumber(row.new_buyers, 0) + safeNumber(row.sellers, 0)
+          : safeNumber(row.holders, 0);
+
+        // ticker가 없으면 cusip를 임시 키로 사용(깨지지 않게)
+        const ticker = String(row.ticker || row.cusip || "—").trim();
+        const name = String(row.name || row.issuer || "—").trim();
+
+        const newH = tradeType === "buy" ? safeNumber(row.new_buyers, 0) : 0;
+
+        return {
+          ticker,
+          name,
+          type,                 // 'long' | 'short'
+          action: tradeType,    // 'buy' | 'sell'
+
+          holders: finalHolders,
+          newHolders: newH,
+          exitHolders: safeNumber(row.sellers, 0),
+
+          avgCost: 0,
+          currentPrice: 0,
+          fairValue: 0,
+
+          eps: 0,
+          per: 0,
+
+          grade: { value: "-", growth: "-", momentum: "-" },
+          trend: tradeType === "buy" ? "Institutional Buy" : "Institutional Sell",
+          topHolders: []
+        };
+      });
+
+      pickFirstMatch();
+      renderAll();
+    } catch (e) {
+      console.error(e);
+      renderError(String(e && e.message ? e.message : e));
+      selected = null;
+      peMultiple = 0;
+      renderPanel();
+    }
+  }
+
+  // ===== Events =====
+  btnBuy.addEventListener("click", async () => {
+    tradeType = "buy";
+    await loadDataAndBuildStocks();
+  });
+  btnSell.addEventListener("click", async () => {
+    tradeType = "sell";
+    await loadDataAndBuildStocks();
+  });
+
+  fltAll.addEventListener("click", async () => {
+    investorType = "all";
+    await loadDataAndBuildStocks();
+  });
+  fltLong.addEventListener("click", async () => {
+    investorType = "long";
+    await loadDataAndBuildStocks();
+  });
+  fltShort.addEventListener("click", async () => {
+    investorType = "short";
+    await loadDataAndBuildStocks();
+  });
+
+  searchEl.addEventListener("input", () => {
+    pickFirstMatch();
+    renderAll();
+  });
+
+  peSlider.addEventListener("input", (e) => {
+    peMultiple = Number(e.target.value);
+    pPE.textContent = `${Number(peMultiple).toFixed(1)}x`;
+    renderPanel();
+  });
+
+  togglePanel.addEventListener("click", () => {
+    panelWrap.classList.toggle("hide");
+  });
+  closePanel.addEventListener("click", () => {
+    panelWrap.classList.add("hide");
+  });
+  expandHint.addEventListener("click", () => {
+    panelWrap.classList.remove("hide");
+    panelWrap.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  // ===== init =====
+  (async function init() {
+    setTheme();
+    syncButtons();
+    await loadDataAndBuildStocks();
+  })();
+  </script>
+</body>
+</html>
