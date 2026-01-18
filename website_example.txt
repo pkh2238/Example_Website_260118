@@ -1,0 +1,595 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  TrendingUp, 
+  TrendingDown, 
+  ShieldCheck, 
+  Zap, 
+  Search, 
+  Info, 
+  ArrowUpRight, 
+  Bell, 
+  ChevronRight,
+  PieChart, 
+  Target, 
+  BarChart3, 
+  Filter, 
+  Globe, 
+  User, 
+  Menu, 
+  ChevronDown, 
+  LayoutDashboard, 
+  FileText, 
+  Activity, 
+  Clock, 
+  Briefcase, 
+  ArrowDownCircle, 
+  ArrowUpCircle,
+  PanelRightClose,
+  PanelRightOpen,
+  X,
+  Users,
+  Hand 
+} from 'lucide-react';
+
+// 확장된 Mock Data
+const MOCK_STOCKS = [
+  { 
+    ticker: 'GOOGL', 
+    name: 'Alphabet Inc.', 
+    type: 'long', 
+    action: 'buy', 
+    holders: 142, 
+    newHolders: 12, 
+    exitHolders: 5, 
+    avgCost: 142.50, 
+    currentPrice: 158.30, 
+    fairValue: 185.20, 
+    eps: 6.85, 
+    per: 23.1, 
+    grade: { value: 'A-', growth: 'B+', momentum: 'A' }, 
+    trend: 'Bullish',
+    topHolders: [
+      { name: 'Berkshire Hathaway', type: 'Long', status: 'Increased' },
+      { name: 'Vanguard Group', type: 'Long', status: 'Maintained' },
+      { name: 'Citadel Advisors', type: 'Short', status: 'New' }
+    ]
+  },
+  { 
+    ticker: 'NVDA', 
+    name: 'NVIDIA Corp', 
+    type: 'short', 
+    action: 'buy', 
+    holders: 215, 
+    newHolders: 45, 
+    exitHolders: 18, 
+    avgCost: 112.10, 
+    currentPrice: 135.20, 
+    fairValue: 105.40, 
+    eps: 4.25, 
+    per: 64.2, 
+    grade: { value: 'F', growth: 'A+', momentum: 'A+' }, 
+    trend: 'Very Bullish',
+    topHolders: [
+      { name: 'Renaissance Tech', type: 'Short', status: 'Increased' },
+      { name: 'Two Sigma Inv.', type: 'Short', status: 'Increased' },
+      { name: 'BlackRock Inc.', type: 'Long', status: 'Maintained' }
+    ]
+  },
+  { 
+    ticker: 'META', 
+    name: 'Meta Platforms', 
+    type: 'short', 
+    action: 'buy', 
+    holders: 98, 
+    newHolders: 15, 
+    exitHolders: 2, 
+    avgCost: 480.20, 
+    currentPrice: 512.40, 
+    fairValue: 560.50, 
+    eps: 20.10, 
+    per: 25.4, 
+    grade: { value: 'B', growth: 'B', momentum: 'B+' }, 
+    trend: 'Neutral',
+    topHolders: [
+      { name: 'Tiger Global', type: 'Short', status: 'New' },
+      { name: 'Chase Coleman', type: 'Short', status: 'Maintained' },
+      { name: 'State Street', type: 'Long', status: 'Maintained' }
+    ]
+  },
+  { 
+    ticker: 'AAPL', 
+    name: 'Apple Inc.', 
+    type: 'long', 
+    action: 'buy', 
+    holders: 185, 
+    newHolders: 8, 
+    exitHolders: 24, 
+    avgCost: 195.00, 
+    currentPrice: 212.30, 
+    fairValue: 205.00, 
+    eps: 6.57, 
+    per: 32.3, 
+    grade: { value: 'C', growth: 'D', momentum: 'C' }, 
+    trend: 'Bearish',
+    topHolders: [
+      { name: 'Berkshire Hathaway', type: 'Long', status: 'Decreased' },
+      { name: 'Morgan Stanley', type: 'Long', status: 'Maintained' },
+      { name: 'Goldman Sachs', type: 'Short', status: 'New' }
+    ]
+  },
+  { 
+    ticker: 'AMZN', 
+    name: 'Amazon.com Inc.', 
+    type: 'long', 
+    action: 'buy', 
+    holders: 165, 
+    newHolders: 20, 
+    exitHolders: 8, 
+    avgCost: 175.40, 
+    currentPrice: 189.20, 
+    fairValue: 210.50, 
+    eps: 4.12, 
+    per: 45.1, 
+    grade: { value: 'B+', growth: 'A', momentum: 'B' }, 
+    trend: 'Bullish',
+    topHolders: [
+      { name: 'Baillie Gifford', type: 'Long', status: 'Increased' },
+      { name: 'FMR LLC', type: 'Long', status: 'Maintained' },
+      { name: 'Point72 Asset', type: 'Short', status: 'New' }
+    ]
+  },
+  { 
+    ticker: 'MSFT', 
+    name: 'Microsoft Corp', 
+    type: 'long', 
+    action: 'buy', 
+    holders: 198, 
+    newHolders: 5, 
+    exitHolders: 2, 
+    avgCost: 385.20, 
+    currentPrice: 420.50, 
+    fairValue: 465.00, 
+    eps: 11.80, 
+    per: 35.5, 
+    grade: { value: 'B', growth: 'B-', momentum: 'B+' }, 
+    trend: 'Neutral',
+    topHolders: [
+      { name: 'Bill Gates Foundation', type: 'Long', status: 'Maintained' },
+      { name: 'Vanguard Group', type: 'Long', status: 'Maintained' },
+      { name: 'Bridgewater Assoc.', type: 'Long', status: 'Increased' }
+    ]
+  },
+  { 
+    ticker: 'TSLA', 
+    name: 'Tesla Inc.', 
+    type: 'short', 
+    action: 'buy', 
+    holders: 120, 
+    newHolders: 32, 
+    exitHolders: 45, 
+    avgCost: 210.00, 
+    currentPrice: 245.30, 
+    fairValue: 195.20, 
+    eps: 3.85, 
+    per: 63.2, 
+    grade: { value: 'D', growth: 'B', momentum: 'A' }, 
+    trend: 'Volatile',
+    topHolders: [
+      { name: 'Ark Invest', type: 'Short', status: 'Increased' },
+      { name: 'Susquehanna', type: 'Short', status: 'Maintained' },
+      { name: 'Barclays PLC', type: 'Long', status: 'New' }
+    ]
+  },
+  { 
+    ticker: 'AMD', 
+    name: 'Advanced Micro Devices', 
+    type: 'short', 
+    action: 'buy', 
+    holders: 112, 
+    newHolders: 22, 
+    exitHolders: 15, 
+    avgCost: 145.00, 
+    currentPrice: 162.30, 
+    fairValue: 180.00, 
+    eps: 3.12, 
+    per: 52.0, 
+    grade: { value: 'B', growth: 'A', momentum: 'B+' }, 
+    trend: 'Bullish',
+    topHolders: [
+      { name: 'Mizuho Financial', type: 'Short', status: 'Increased' },
+      { name: 'BlackRock Inc.', type: 'Long', status: 'Maintained' },
+      { name: 'Jane Street Group', type: 'Short', status: 'New' }
+    ]
+  },
+  { 
+    ticker: 'PLTR', 
+    name: 'Palantir Technologies', 
+    type: 'short', 
+    action: 'buy', 
+    holders: 78, 
+    newHolders: 34, 
+    exitHolders: 12, 
+    avgCost: 24.50, 
+    currentPrice: 38.20, 
+    fairValue: 32.00, 
+    eps: 0.85, 
+    per: 45.0, 
+    grade: { value: 'C', growth: 'A+', momentum: 'A+' }, 
+    trend: 'Bullish',
+    topHolders: [
+      { name: 'Sancus Capital', type: 'Short', status: 'New' },
+      { name: 'Renaissance Tech', type: 'Short', status: 'Increased' },
+      { name: 'Vanguard Group', type: 'Long', status: 'Maintained' }
+    ]
+  },
+  { 
+    ticker: 'CVX', 
+    name: 'Chevron Corp', 
+    type: 'long', 
+    action: 'sell', 
+    holders: 85, 
+    newHolders: 2, 
+    exitHolders: 32, 
+    avgCost: 158.00, 
+    currentPrice: 151.20, 
+    fairValue: 140.00, 
+    eps: 12.50, 
+    per: 11.2, 
+    grade: { value: 'B', growth: 'D', momentum: 'C' }, 
+    trend: 'Bearish',
+    topHolders: [
+      { name: 'Berkshire Hathaway', type: 'Long', status: 'Decreased' },
+      { name: 'State Street', type: 'Long', status: 'Maintained' },
+      { name: 'Geode Capital', type: 'Long', status: 'Maintained' }
+    ]
+  },
+];
+
+const App = () => {
+  const [tradeType, setTradeType] = useState('buy');
+  const [investorType, setInvestorType] = useState('all');
+  const [selectedStock, setSelectedStock] = useState(MOCK_STOCKS[0]);
+  const [perMultiple, setPerMultiple] = useState(selectedStock.per);
+  const [showSidebar, setShowSidebar] = useState(true);
+
+  useEffect(() => {
+    const firstMatch = MOCK_STOCKS.find(s => 
+      s.action === tradeType && (investorType === 'all' || s.type === investorType)
+    );
+    if (firstMatch) {
+      setSelectedStock(firstMatch);
+      setPerMultiple(firstMatch.per);
+    }
+  }, [tradeType, investorType]);
+
+  useEffect(() => {
+    setPerMultiple(selectedStock.per);
+  }, [selectedStock]);
+
+  const estimatedFairValue = (selectedStock.eps * perMultiple).toFixed(2);
+  const upside = (((estimatedFairValue - selectedStock.currentPrice) / selectedStock.currentPrice) * 100).toFixed(1);
+
+  const filteredStocks = MOCK_STOCKS
+    .filter(s => s.action === tradeType && (investorType === 'all' || s.type === investorType))
+    .slice(0, 5);
+
+  const themeColor = tradeType === 'buy' ? 'orange' : 'rose';
+  const themeDark = tradeType === 'buy' ? '#0F172A' : '#450A0A';
+
+  return (
+    <div className="min-h-screen bg-[#FBFBFC] text-[#334155] antialiased">
+      <style>
+        {`
+          @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap');
+          
+          body { font-family: 'Inter', sans-serif; letter-spacing: -0.01em; }
+
+          .num-data {
+            font-family: 'JetBrains Mono', monospace !important;
+            font-variant-numeric: tabular-nums;
+            font-weight: 500 !important;
+            letter-spacing: -0.02em;
+          }
+
+          .font-display { font-weight: 900; }
+          
+          .custom-scrollbar::-webkit-scrollbar { height: 6px; }
+          .custom-scrollbar::-webkit-scrollbar-track { bg: transparent; }
+          .custom-scrollbar::-webkit-scrollbar-thumb { background: #E2E8F0; border-radius: 10px; }
+          .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #CBD5E1; }
+        `}
+      </style>
+
+      {/* Top Utility Nav */}
+      <div className={`bg-[${themeDark}] text-white text-[10px] py-2 px-6 flex justify-between items-center font-bold uppercase tracking-[0.1em] transition-all`}>
+        <div className="flex space-x-6">
+          <span className="flex items-center"><span className="w-1 h-1 bg-emerald-400 rounded-full mr-2"></span>Network: Connected</span>
+          <span className="text-slate-400 opacity-80 uppercase tracking-tighter italic">Big Hands Activity Tracking</span>
+        </div>
+        <div className="flex space-x-6 opacity-70 uppercase tracking-widest hidden sm:flex">
+          <a href="#" className="hover:text-white transition">Insights</a>
+          <a href="#" className="hover:text-white transition">Market Data</a>
+        </div>
+      </div>
+
+      {/* Main Header */}
+      <header className="bg-white border-b border-slate-100 sticky top-0 z-50">
+        <div className="max-w-[1600px] mx-auto px-6 h-16 flex justify-between items-center">
+          <div className="flex items-center space-x-12">
+            <div className="flex items-center space-x-3 cursor-pointer group">
+              <div className={`bg-[${themeDark}] p-2 rounded shadow-sm group-hover:bg-orange-600 transition-colors`}>
+                <Hand className="text-white" size={20} />
+              </div>
+              <span className="text-xl font-display tracking-tight text-slate-900 uppercase">BIG<span className={`text-${themeColor}-600`}>HANDS</span></span>
+            </div>
+            <nav className="hidden xl:flex space-x-8 text-[13px] font-semibold text-slate-400">
+              <a href="#" className="text-slate-900 border-b-2 border-slate-900 pb-[21px] translate-y-[1px]">Whale Consensus</a>
+              <a href="#" className="hover:text-slate-900 transition-colors">Investors</a>
+              <a href="#" className="hover:text-slate-900 transition-colors">Institutional Lab</a>
+            </nav>
+          </div>
+          <div className="flex items-center space-x-6">
+            <button 
+              onClick={() => setShowSidebar(!showSidebar)}
+              className="p-2 text-slate-400 hover:text-slate-900 transition bg-slate-50 rounded-lg border border-slate-100 hidden lg:block"
+            >
+              {showSidebar ? <PanelRightClose size={20} /> : <PanelRightOpen size={20} />}
+            </button>
+            <div className="relative hidden md:block">
+              <Search className="absolute left-3 top-2.5 text-slate-300" size={14} />
+              <input type="text" placeholder="Search Tickers..." className="bg-slate-50 border border-slate-100 pl-9 pr-4 py-1.5 rounded-lg text-sm w-36 focus:w-56 transition-all focus:outline-none focus:bg-white"/>
+            </div>
+            <button className={`bg-${themeColor}-600 text-white px-5 py-2 rounded-lg font-bold text-[11px] hover:brightness-105 transition uppercase tracking-wider shadow-lg shadow-${themeColor}-600/20`}>PRO ACCESS</button>
+          </div>
+        </div>
+      </header>
+
+      <main className={`max-w-[1600px] mx-auto px-6 py-8 transition-all duration-300`}>
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
+          
+          {/* Left Content Area */}
+          <div className={`transition-all duration-500 w-full ${showSidebar ? 'lg:w-2/3 xl:w-3/4' : 'lg:w-full'}`}>
+            
+            <div className="flex flex-wrap items-center justify-between mb-8 gap-4">
+              <div className="flex bg-slate-100 p-1 rounded-xl shadow-inner">
+                <button 
+                  onClick={() => setTradeType('buy')}
+                  className={`flex items-center px-6 py-2 rounded-lg text-[10px] font-bold transition-all uppercase tracking-wider ${tradeType === 'buy' ? 'bg-white text-orange-600 shadow-sm' : 'text-slate-400 hover:text-slate-500'}`}
+                >
+                  <ArrowUpCircle size={14} className="mr-2" /> Top Buys
+                </button>
+                <button 
+                  onClick={() => setTradeType('sell')}
+                  className={`flex items-center px-6 py-2 rounded-lg text-[10px] font-bold transition-all uppercase tracking-wider ${tradeType === 'sell' ? 'bg-white text-rose-600 shadow-sm' : 'text-slate-400 hover:text-slate-500'}`}
+                >
+                  <ArrowDownCircle size={14} className="mr-2" /> Top Sells
+                </button>
+              </div>
+
+              <div className="flex p-0.5 bg-slate-50 rounded-lg border border-slate-100">
+                {['all', 'long', 'short'].map((tab) => (
+                  <button 
+                    key={tab}
+                    onClick={() => setInvestorType(tab)}
+                    className={`px-4 py-1.5 text-[10px] font-bold rounded-md transition-all uppercase ${investorType === tab ? 'bg-white text-slate-900 shadow-xs' : 'text-slate-400 hover:text-slate-500'}`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-white p-6 rounded-2xl border border-slate-100 flex items-center justify-between shadow-sm mb-6">
+              <div className="flex items-center space-x-5">
+                <div className={`p-3 bg-${themeColor}-50 rounded-xl`}>
+                  <Hand size={22} className={`text-${themeColor}-600`} />
+                </div>
+                <div>
+                  <h2 className="text-[10px] font-bold uppercase text-slate-300 tracking-[0.2em] mb-1">Big Hands Intelligence</h2>
+                  <p className="text-[18px] font-display tracking-tight text-slate-800">
+                    {tradeType.toUpperCase()} Momentum: {investorType.toUpperCase()} Institutional Consensus
+                  </p>
+                </div>
+              </div>
+              {!showSidebar && (
+                <button 
+                  onClick={() => setShowSidebar(true)}
+                  className="text-[11px] font-bold text-blue-600 hover:bg-blue-50 px-3 py-1.5 rounded-lg transition border border-blue-100"
+                >
+                  Expand Analysis
+                </button>
+              )}
+            </div>
+
+            <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+              <div className="overflow-x-auto custom-scrollbar">
+                <table className="w-full text-left min-w-[700px]">
+                  <thead className="bg-slate-50 border-b border-slate-50">
+                    <tr className="text-[9px] font-bold text-slate-300 uppercase tracking-widest">
+                      <th className="px-6 py-4 text-center w-14">#</th>
+                      <th className="px-6 py-4">STOCK SYMBOL</th>
+                      <th className="px-6 py-4">WHALE ACTIVITY (T/N/S)</th>
+                      <th className="px-6 py-4 text-center">AVG. COST</th>
+                      <th className="px-6 py-4 text-center">FAIR VALUE</th>
+                      <th className="px-6 py-4 text-center">RATING</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-50">
+                    {filteredStocks.map((stock, index) => (
+                      <tr 
+                        key={stock.ticker}
+                        onClick={() => {
+                          setSelectedStock(stock);
+                          if (window.innerWidth < 1024) setShowSidebar(true);
+                        }}
+                        className={`cursor-pointer hover:bg-slate-50/50 transition-all ${selectedStock.ticker === stock.ticker ? `bg-${themeColor}-50/20 border-l-4 border-l-${themeColor}-500 shadow-sm` : 'border-l-4 border-l-transparent'}`}
+                      >
+                        <td className="px-6 py-5 text-center text-slate-200 num-data text-[12px]">
+                          {index + 1}
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className="flex flex-col">
+                            <div className="flex items-center space-x-2">
+                              <span className="font-bold text-[14px] text-slate-700 tracking-tight">{stock.ticker}</span>
+                              <span className={`text-[8px] font-bold px-1 py-0.5 rounded-sm uppercase ${stock.type === 'long' ? 'bg-slate-800 text-white' : 'bg-slate-200 text-slate-600'}`}>
+                                {stock.type === 'long' ? 'L' : 'S'}
+                              </span>
+                            </div>
+                            <span className="text-[10px] text-slate-300 font-semibold truncate w-32 tracking-tight uppercase">{stock.name}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className="flex items-center space-x-4">
+                            <span className="text-[13px] text-slate-600 num-data">{stock.holders}</span>
+                            <div className="flex items-center text-[10px] num-data space-x-2 opacity-70 font-medium tracking-tighter">
+                              <span className="text-emerald-500">+{stock.newHolders}</span>
+                              <span className="text-rose-400">-{stock.exitHolders}</span>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-5 text-center num-data text-[12px] text-slate-400 font-normal">${stock.avgCost.toFixed(2)}</td>
+                        <td className="px-6 py-5 text-center num-data text-[12px] font-medium text-blue-600/70">${stock.fairValue.toFixed(2)}</td>
+                        <td className="px-6 py-5 text-center">
+                          <div className={`mx-auto w-8 h-8 flex items-center justify-center rounded-lg border font-bold text-[10px] ${
+                            stock.grade.value.startsWith('A') ? 'bg-emerald-500 text-white border-emerald-500 shadow-sm' :
+                            stock.grade.value.startsWith('B') ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
+                            'bg-slate-50 text-slate-300 border-slate-100'
+                          }`}>
+                            {stock.grade.value}
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          {/* Right Sidebar Detail Panel */}
+          {showSidebar && (
+            <div className="w-full lg:w-1/3 xl:w-1/4 sticky top-24 transition-all duration-300 pb-10">
+              <div className="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/40 overflow-hidden relative">
+                <button 
+                  onClick={() => setShowSidebar(false)}
+                  className="absolute top-4 right-4 text-white/50 hover:text-white z-10 transition-colors"
+                >
+                  <X size={18} />
+                </button>
+
+                <div className={`p-7 bg-[${themeDark}] text-white transition-colors duration-500`}>
+                  <div className="mb-1">
+                    <h4 className="text-[18px] font-display tracking-tight uppercase leading-none">{selectedStock.ticker} Analyst</h4>
+                  </div>
+                  <p className="text-[10px] text-slate-400 font-semibold uppercase tracking-widest opacity-70 italic">{selectedStock.trend} Consensus</p>
+                </div>
+                
+                <div className="p-7 space-y-6">
+                  {/* Rating Grid */}
+                  <div className="grid grid-cols-3 gap-2">
+                    <div className="bg-slate-50/50 p-3 rounded-xl text-center border border-slate-50">
+                      <p className="text-[8px] font-bold text-slate-300 uppercase tracking-widest mb-1.5">Value</p>
+                      <p className="text-[14px] font-bold text-slate-600 tracking-tight">{selectedStock.grade.value}</p>
+                    </div>
+                    <div className="bg-slate-50/50 p-3 rounded-xl text-center border border-slate-50">
+                      <p className="text-[8px] font-bold text-slate-300 uppercase tracking-widest mb-1.5">Growth</p>
+                      <p className="text-[14px] font-bold text-slate-600 tracking-tight">{selectedStock.grade.growth}</p>
+                    </div>
+                    <div className="bg-slate-50/50 p-3 rounded-xl text-center border border-slate-50">
+                      <p className="text-[8px] font-bold text-slate-300 uppercase tracking-widest mb-1.5">Safety</p>
+                      <p className="text-[14px] font-bold text-slate-600 tracking-tight">A+</p>
+                    </div>
+                  </div>
+
+                  {/* Valuation Engine */}
+                  <div className="space-y-6 pt-2">
+                    {/* Live Current Price Section */}
+                    <div className="flex justify-between items-start pb-4 border-b border-slate-50">
+                      <div>
+                        <p className="text-[8px] font-bold text-slate-300 uppercase tracking-widest mb-1 flex items-center">
+                          <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full mr-1.5 animate-pulse"></span>
+                          Live Market Price
+                        </p>
+                        <p className="text-[28px] font-medium num-data tracking-tight text-slate-700 leading-none">
+                          ${selectedStock.currentPrice.toFixed(2)}
+                        </p>
+                      </div>
+                      <div className={`text-[11px] font-bold px-2 py-0.5 rounded-lg num-data ${parseFloat(upside) > 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+                        {parseFloat(upside) > 0 ? '▲' : '▼'} {Math.abs(upside)}%
+                      </div>
+                    </div>
+
+                    <div className="space-y-1">
+                      <p className="text-[8px] font-bold text-slate-300 uppercase tracking-widest mb-1">Intrinsic Target</p>
+                      <p className="text-[34px] font-medium num-data tracking-tight text-blue-600 leading-none">
+                        ${estimatedFairValue}
+                      </p>
+                    </div>
+
+                    <div className="space-y-4 pt-2">
+                      <div className="flex justify-between text-[11px] font-semibold uppercase tracking-tight">
+                        <span className="text-slate-400">P/E Multiple Adjustment</span>
+                        <span className={`text-${themeColor}-600 num-data text-xs bg-${themeColor}-50 px-1.5 py-0.5 rounded font-bold`}>{perMultiple}x</span>
+                      </div>
+                      <input type="range" min="-100" max="150" step="0.5" value={perMultiple} onChange={(e) => setPerMultiple(parseFloat(e.target.value))} className={`w-full h-1 bg-slate-100 rounded-lg appearance-none cursor-pointer accent-${themeColor}-600`}/>
+                    </div>
+
+                    <button className={`w-full bg-slate-900 text-white py-4 rounded-2xl font-bold text-[10px] uppercase tracking-[0.2em] hover:bg-slate-800 transition active:scale-[0.98] shadow-lg shadow-slate-200`}>
+                      {tradeType === 'buy' ? 'Set Watchlist' : 'Set Exit Point'}
+                    </button>
+                  </div>
+
+                  {/* Institutional Holders Section */}
+                  <div className="pt-4 border-t border-slate-100">
+                    <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.15em] mb-4 flex items-center">
+                      <Users size={12} className="mr-2" /> Top Big Hands Holders
+                    </h5>
+                    <div className="space-y-3">
+                      {selectedStock.topHolders && selectedStock.topHolders.map((holder, idx) => (
+                        <div key={idx} className="flex items-center justify-between p-2.5 bg-slate-50/50 rounded-xl border border-slate-100/50 group hover:bg-white hover:shadow-sm transition-all duration-300">
+                          <div className="flex flex-col">
+                            <span className="text-[11px] font-bold text-slate-700 leading-tight group-hover:text-blue-600 transition-colors uppercase tracking-tight">{holder.name}</span>
+                            <span className={`text-[9px] font-semibold mt-0.5 ${holder.type === 'Long' ? 'text-emerald-500' : 'text-amber-500'}`}>{holder.type}</span>
+                          </div>
+                          <div className={`text-[9px] font-bold px-1.5 py-0.5 rounded-md uppercase tracking-tighter ${
+                            holder.status === 'New' ? 'bg-blue-100 text-blue-600' : 
+                            holder.status === 'Increased' ? 'bg-emerald-100 text-emerald-600' : 
+                            holder.status === 'Decreased' ? 'bg-rose-100 text-rose-600' : 
+                            'bg-slate-200 text-slate-500'
+                          }`}>
+                            {holder.status}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <button className="w-full mt-4 text-[9px] font-bold text-slate-400 uppercase tracking-widest hover:text-blue-600 transition-colors flex items-center justify-center">
+                      All Holders Details <ChevronRight size={10} className="ml-1" />
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </main>
+
+      <footer className="max-w-[1600px] mx-auto px-6 py-12 border-t border-slate-50 mt-10">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center space-x-3">
+            <div className={`bg-slate-900 p-1.5 rounded-md`}><Hand className="text-white" size={14} /></div>
+            <span className="text-xs font-display tracking-tight uppercase text-slate-900 leading-none">BIG HANDS INTELLIGENCE</span>
+          </div>
+          <p className="text-[9px] text-slate-300 font-medium uppercase tracking-[0.2em]">
+            Tracking Smart Money Movements via 13F Quantitative Analysis.
+          </p>
+          <div className="flex space-x-6 text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+            <a href="#" className="hover:text-slate-900 transition">Disclaimer</a>
+            <a href="#" className="hover:text-slate-900 transition">Contact</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default App;
