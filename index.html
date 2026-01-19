@@ -1,421 +1,516 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BIG HANDS Intelligence</title>
-
-  <!-- Fonts: Inter for text, JetBrains Mono for numbers -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VOD 강의 플랫폼 - 랜딩</title>
+  <meta name="description" content="실무에 바로 쓰는 VOD 강의. 자막·배속·노트·퀴즈로 학습 효율을 극대화하세요."/>
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    :root {
-      --bg: #FBFBFC;
-      --text: #334155;
-      --muted: #94a3b8;
-      --border: #e2e8f0;
-      --card: #ffffff;
-      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
-      --shadow-soft: 0 6px 18px rgba(15, 23, 42, 0.06);
-
-      --themeDark: #0F172A;
-      --themeAccent: #ea580c; 
-      --themeAccentSoft: rgba(234, 88, 12, 0.10);
-      --danger: #e11d48;
-      --ok: #10b981;
-      --link: #2563eb;
-    }
-
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, system-ui, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      letter-spacing: -0.01em;
-    }
-    .mono { font-family: "JetBrains Mono", monospace; font-variant-numeric: tabular-nums; }
-    .container { max-width: 1600px; margin: 0 auto; padding: 0 24px; }
-    
-    .topbar {
-      background: var(--themeDark);
-      color: #fff;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      padding: 10px 0;
-      transition: background 0.5s ease;
-    }
-    .topbar .row { display: flex; justify-content: space-between; align-items: center; }
-    .dot { width: 6px; height: 6px; border-radius: 999px; background: var(--ok); display: inline-block; margin-right: 8px; }
-
-    header {
-      position: sticky; top: 0; z-index: 30;
-      background: var(--card);
-      border-bottom: 1px solid rgba(226,232,240,0.6);
-    }
-    header .row { height: 64px; display: flex; justify-content: space-between; align-items: center; }
-    
-    .brand { display: flex; align-items: center; gap: 12px; cursor: pointer; text-decoration: none; }
-    .logo {
-      width: 36px; height: 36px; border-radius: 10px;
-      background: var(--themeDark);
-      display: flex; align-items: center; justify-content: center;
-      color: #fff; font-weight: 900;
-    }
-    .brandname { font-weight: 900; text-transform: uppercase; color: #0f172a; font-size: 18px; }
-    .brandname span { color: var(--themeAccent); }
-
-    .nav { display: none; gap: 24px; font-size: 13px; font-weight: 700; }
-    @media (min-width: 1024px) { .nav { display: flex; } }
-    .nav a { color: #94a3b8; text-decoration: none; }
-    .nav a.active { color: #0f172a; border-bottom: 2px solid #0f172a; padding-bottom: 4px; }
-
-    .btn {
-      border: 1px solid var(--border);
-      background: #f8fafc;
-      padding: 8px 16px;
-      border-radius: 10px;
-      font-size: 11px;
-      font-weight: 800;
-      cursor: pointer;
-      text-transform: uppercase;
-    }
-    .btn.pro { background: var(--themeAccent); color: #fff; border: none; }
-
-    main { padding: 32px 0; }
-    .layout { display: flex; flex-direction: column; gap: 24px; }
-    @media (min-width: 1024px) {
-      .layout { flex-direction: row; align-items: flex-start; }
-      .left { width: 70%; }
-      .right { width: 30%; position: sticky; top: 96px; }
-    }
-
-    .seg { display: flex; background: #e2e8f0; padding: 4px; border-radius: 12px; gap: 4px; }
-    .seg button { border: none; padding: 8px 16px; border-radius: 10px; font-size: 11px; font-weight: 800; cursor: pointer; color: #64748b; background: transparent; }
-    .seg button.active { background: #fff; color: var(--themeAccent); box-shadow: var(--shadow-soft); }
-
-    .chips { display: flex; gap: 8px; }
-    .chips button { border: 1px solid var(--border); padding: 6px 12px; border-radius: 8px; font-size: 10px; font-weight: 800; cursor: pointer; background: #fff; color: #94a3b8; text-transform: uppercase; }
-    .chips button.active { border-color: #0f172a; color: #0f172a; background: #f8fafc; }
-
-    .card { background: #fff; border: 1px solid var(--border); border-radius: 20px; box-shadow: var(--shadow-soft); overflow: hidden; }
-    .hero-banner { padding: 24px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
-    
-    table { width: 100%; border-collapse: collapse; }
-    th { background: #f8fafc; padding: 16px; font-size: 10px; font-weight: 800; color: #94a3b8; text-transform: uppercase; text-align: left; }
-    td { padding: 18px 16px; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
-    tr:hover { background: #fdfdfd; cursor: pointer; }
-    tr.selected { background: var(--themeAccentSoft); border-left: 4px solid var(--themeAccent); }
-
-    .rank { color: #cbd5e1; font-weight: 800; text-align: center; }
-    .ticker { font-weight: 900; font-size: 15px; color: #1e293b; }
-    .pill { font-size: 9px; font-weight: 900; padding: 2px 6px; border-radius: 4px; margin-left: 6px; }
-    .pill.long { background: #0f172a; color: #fff; }
-    .pill.short { background: #e2e8f0; color: #475569; }
-
-    .rating { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 11px; }
-    .rating.a { background: var(--ok); color: #fff; }
-    .rating.b { background: #ecfdf5; color: var(--ok); border: 1px solid #d1fae5; }
-    .rating.other { background: #f8fafc; color: #94a3b8; }
-
-    /* Right Panel Detail */
-    .panel-head { padding: 24px; background: var(--themeDark); color: #fff; transition: background 0.5s ease; }
-    .panel-body { padding: 24px; }
-    .target-price { font-size: 42px; font-weight: 700; color: var(--link); margin: 8px 0; }
-    .badge { padding: 4px 8px; border-radius: 6px; font-weight: 800; font-size: 12px; }
-    .badge.up { background: #ecfdf5; color: var(--ok); }
-    .badge.down { background: #fff1f2; color: var(--danger); }
-
-    .holder-card { display: flex; justify-content: space-between; padding: 12px; background: #f8fafc; border-radius: 12px; margin-bottom: 8px; border: 1px solid var(--border); }
-    .holder-name { font-size: 12px; font-weight: 800; color: #334155; }
-
-    .hide { display: none !important; }
+    /* 부드러운 스크롤 */
+    html { scroll-behavior: smooth; }
   </style>
 </head>
 
-<body>
-  <div class="topbar" id="topbar">
-    <div class="container">
-      <div class="row">
-        <div><span class="dot"></span>Network: Live Data Analysis</div>
-        <div style="font-style: italic; opacity: 0.7;">13F Smart Money Tracker</div>
-      </div>
-    </div>
+<body class="bg-slate-950 text-slate-50">
+  <!-- Background accents -->
+  <div class="pointer-events-none fixed inset-0 overflow-hidden">
+    <div class="absolute -top-40 -left-40 h-[520px] w-[520px] rounded-full bg-indigo-500/20 blur-3xl"></div>
+    <div class="absolute top-40 -right-40 h-[520px] w-[520px] rounded-full bg-fuchsia-500/20 blur-3xl"></div>
   </div>
 
-  <header>
-    <div class="container">
-      <div class="row">
-        <a href="/" class="brand">
-          <div class="logo">BH</div>
-          <div class="brandname">BIG<span>HANDS</span></div>
+  <!-- Header -->
+  <header class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/70 backdrop-blur">
+    <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
+      <a href="#" class="flex items-center gap-2">
+        <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/10">
+          ▶
+        </span>
+        <span class="text-lg font-semibold tracking-tight">VOD Academy</span>
+      </a>
+
+      <nav class="hidden items-center gap-6 text-sm text-slate-200 md:flex">
+        <a href="#features" class="hover:text-white">특징</a>
+        <a href="#courses" class="hover:text-white">강의</a>
+        <a href="#reviews" class="hover:text-white">후기</a>
+        <a href="#pricing" class="hover:text-white">가격</a>
+        <a href="#faq" class="hover:text-white">FAQ</a>
+      </nav>
+
+      <div class="hidden items-center gap-3 md:flex">
+        <button class="rounded-xl px-4 py-2 text-sm text-slate-200 hover:text-white">로그인</button>
+        <a href="#cta" class="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-slate-100">
+          7일 무료 체험
         </a>
-        <nav class="nav">
-          <a href="#" class="active">Whale Consensus</a>
-          <a href="#">Super Investors</a>
-          <a href="#">Valuation Lab</a>
-        </nav>
-        <div class="actions">
-          <button class="btn pro">Pro Access</button>
+      </div>
+
+      <button id="menuBtn" class="md:hidden rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm">
+        메뉴
+      </button>
+    </div>
+
+    <!-- Mobile menu -->
+    <div id="mobileMenu" class="hidden border-t border-white/10 md:hidden">
+      <div class="mx-auto max-w-6xl px-4 py-3 grid gap-2 text-sm text-slate-200">
+        <a href="#features" class="rounded-lg px-3 py-2 hover:bg-white/5">특징</a>
+        <a href="#courses" class="rounded-lg px-3 py-2 hover:bg-white/5">강의</a>
+        <a href="#reviews" class="rounded-lg px-3 py-2 hover:bg-white/5">후기</a>
+        <a href="#pricing" class="rounded-lg px-3 py-2 hover:bg-white/5">가격</a>
+        <a href="#faq" class="rounded-lg px-3 py-2 hover:bg-white/5">FAQ</a>
+        <div class="mt-2 flex gap-2">
+          <button class="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2">로그인</button>
+          <a href="#cta" class="flex-1 rounded-xl bg-white px-4 py-2 text-center font-semibold text-slate-950">무료 체험</a>
         </div>
       </div>
     </div>
   </header>
 
-  <main class="container">
-    <div class="layout">
-      <!-- Left List -->
-      <section class="left">
-        <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 20px;">
-          <div class="seg">
-            <button id="btnBuy" class="active">▲ Top Buys</button>
-            <button id="btnSell">▼ Top Sells</button>
+  <!-- Hero -->
+  <main class="relative">
+    <section class="mx-auto max-w-6xl px-4 pt-14 pb-10 md:pt-20">
+      <div class="grid items-center gap-10 md:grid-cols-2">
+        <div>
+          <p class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-slate-200">
+            <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
+            신규 수강생을 위한 웰컴 패키지 제공
+          </p>
+
+          <h1 class="mt-5 text-4xl font-semibold leading-tight tracking-tight md:text-5xl">
+            실무에 바로 쓰는 VOD 강의,
+            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-fuchsia-300">학습 효율</span>을 끝까지 끌어올리세요.
+          </h1>
+
+          <p class="mt-5 text-base leading-relaxed text-slate-200">
+            자막·배속·구간 반복·노트·퀴즈·수료증까지.
+            “듣는 강의”가 아니라 “완주하는 학습 경험”을 제공합니다.
+          </p>
+
+          <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+            <a href="#cta" class="rounded-2xl bg-white px-6 py-3 text-center font-semibold text-slate-950 hover:bg-slate-100">
+              7일 무료 체험 시작
+            </a>
+            <a href="#courses" class="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-center font-semibold text-white hover:bg-white/10">
+              강의 둘러보기
+            </a>
           </div>
-          <div class="chips">
-            <button id="fltAll" class="active">all</button>
-            <button id="fltLong">long</button>
-            <button id="fltShort">short</button>
+
+          <div class="mt-7 grid grid-cols-3 gap-3 text-center">
+            <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+              <div class="text-lg font-semibold">4.8/5</div>
+              <div class="text-xs text-slate-300">평균 만족도</div>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+              <div class="text-lg font-semibold">120K+</div>
+              <div class="text-xs text-slate-300">누적 수강생</div>
+            </div>
+            <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+              <div class="text-lg font-semibold">3,500+</div>
+              <div class="text-xs text-slate-300">강의 영상</div>
+            </div>
           </div>
         </div>
 
-        <div class="card">
-          <div class="hero-banner">
-            <div>
-              <div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase; letter-spacing:0.1em;">Consensus Report</div>
-              <h2 id="headline" style="margin:4px 0 0; font-size:20px; font-weight:900;">BUY Momentum: ALL Investors</h2>
-            </div>
-            <div id="updateTime" style="font-size:11px; font-weight:700; color:var(--muted);">Checking for updates...</div>
-          </div>
-          <table>
-            <thead>
-              <tr>
-                <th style="text-align:center; width:60px;">#</th>
-                <th>Stock Symbol</th>
-                <th>Whale Activity (T/N/S)</th>
-                <th style="text-align:center;">Avg. Cost</th>
-                <th style="text-align:center;">Fair Value</th>
-                <th style="text-align:center;">Rating</th>
-              </tr>
-            </thead>
-            <tbody id="stockRows">
-              <!-- JS maps rows here -->
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- Right Detail -->
-      <aside class="right" id="detailPanel">
-        <div class="card shadow-lg">
-          <div class="panel-head" id="pHead">
-            <div style="display:flex; justify-content: space-between; align-items: flex-start;">
-              <h3 id="pTicker" style="margin:0; font-size:22px; font-weight:900;">SELECT STOCK</h3>
-              <div class="badge" style="background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.2);">ANALYSIS</div>
-            </div>
-            <div id="pTrend" style="font-size:11px; font-weight:700; opacity:0.7; margin-top:4px; text-transform:uppercase;">Quantitative Consensus</div>
-          </div>
-          <div class="panel-body">
-            <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 24px;">
-              <div>
-                <div style="font-size:10px; font-weight:800; color:var(--muted); text-transform:uppercase;">Intrinsic Target</div>
-                <div class="target-price mono" id="pTarget">$0.00</div>
-              </div>
-              <div class="badge mono" id="pUpside">0.0%</div>
+        <!-- Mock player card -->
+        <div class="relative">
+          <div class="rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-white/5 p-6 shadow-2xl">
+            <div class="flex items-center justify-between">
+              <div class="text-sm font-semibold">오늘의 추천</div>
+              <div class="text-xs text-slate-300">업데이트: 매주</div>
             </div>
 
-            <div style="margin-bottom: 24px;">
-              <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                <span style="font-size:11px; font-weight:800; color:var(--text);">P/E Adjustment</span>
-                <span class="mono" id="pPE" style="font-weight:800; color:var(--themeAccent);">15.0x</span>
+            <div class="mt-5 overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60">
+              <div class="aspect-video w-full bg-gradient-to-r from-indigo-500/30 to-fuchsia-500/30 flex items-center justify-center">
+                <div class="rounded-full bg-white/15 px-5 py-3 ring-1 ring-white/20">
+                  <span class="text-sm font-semibold">▶ 재생 미리보기</span>
+                </div>
               </div>
-              <input type="range" id="peSlider" min="1" max="100" step="0.5" value="15" style="width:100%; accent-color:var(--themeAccent);">
-              <p style="font-size:11px; color:var(--muted); margin-top:8px; line-height:1.4;">EPS × P/E = Target. Use slider to simulate different market conditions.</p>
+              <div class="p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p class="text-sm font-semibold">데이터로 문제를 정의하고 개선안까지 설계하기</p>
+                    <p class="mt-1 text-xs text-slate-300">중급 · 2시간 40분 · 퀴즈 12개</p>
+                  </div>
+                  <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200">NEW</span>
+                </div>
+                <div class="mt-4">
+                  <div class="h-2 w-full rounded-full bg-white/10">
+                    <div class="h-2 w-2/5 rounded-full bg-white"></div>
+                  </div>
+                  <div class="mt-2 flex justify-between text-xs text-slate-300">
+                    <span>진도 40%</span>
+                    <span>배속 1.25x · 자막 ON</span>
+                  </div>
+                </div>
+              </div>
             </div>
 
-            <div style="border-top:1px solid var(--border); padding-top:20px;">
-              <div style="font-size:11px; font-weight:800; color:var(--muted); text-transform:uppercase; margin-bottom:12px;">Top Institutional Holders</div>
-              <div id="holderList">
-                <!-- Holders go here -->
+            <div class="mt-5 grid grid-cols-3 gap-3 text-xs text-slate-200">
+              <div class="rounded-2xl border border-white/10 bg-white/5 px-3 py-3">
+                <div class="font-semibold">자막/번역</div>
+                <div class="mt-1 text-slate-300">다국어 지원</div>
+              </div>
+              <div class="rounded-2xl border border-white/10 bg-white/5 px-3 py-3">
+                <div class="font-semibold">노트</div>
+                <div class="mt-1 text-slate-300">타임스탬프</div>
+              </div>
+              <div class="rounded-2xl border border-white/10 bg-white/5 px-3 py-3">
+                <div class="font-semibold">퀴즈</div>
+                <div class="mt-1 text-slate-300">즉시 피드백</div>
               </div>
             </div>
-            
-            <button style="width:100%; padding:16px; border:none; border-radius:14px; background:#0f172a; color:#fff; font-weight:900; text-transform:uppercase; letter-spacing:0.1em; cursor:pointer; margin-top:20px;">Add to Watchlist</button>
           </div>
         </div>
-      </aside>
-    </div>
+      </div>
+
+      <!-- Trust logos -->
+      <div class="mt-12 border-t border-white/10 pt-8">
+        <p class="text-xs text-slate-300">다양한 팀이 함께 학습하고 있습니다</p>
+        <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm text-slate-200">Company A</div>
+          <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm text-slate-200">Company B</div>
+          <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm text-slate-200">Studio C</div>
+          <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm text-slate-200">Team D</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features -->
+    <section id="features" class="mx-auto max-w-6xl px-4 py-14">
+      <div class="flex items-end justify-between gap-6">
+        <div>
+          <h2 class="text-2xl font-semibold tracking-tight md:text-3xl">학습 완주를 돕는 기능</h2>
+          <p class="mt-2 text-slate-200">학습 흐름을 방해하지 않고, 필요한 순간에 바로 쓰는 기능만 담았습니다.</p>
+        </div>
+        <a href="#cta" class="hidden rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold hover:bg-white/10 md:inline-flex">
+          기능 데모 요청
+        </a>
+      </div>
+
+      <div class="mt-8 grid gap-4 md:grid-cols-3">
+        <div class="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div class="text-lg font-semibold">스마트 플레이어</div>
+          <p class="mt-2 text-sm leading-relaxed text-slate-200">배속, 구간 반복, 북마크, 단축키로 학습 시간을 절약합니다.</p>
+          <ul class="mt-4 space-y-2 text-sm text-slate-200">
+            <li>• 0.5x~2.5x 배속</li>
+            <li>• 챕터/구간 반복</li>
+            <li>• 자동 이어보기</li>
+          </ul>
+        </div>
+
+        <div class="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div class="text-lg font-semibold">노트 & 검색</div>
+          <p class="mt-2 text-sm leading-relaxed text-slate-200">타임스탬프 노트로 “그 부분”을 다시 찾는 시간이 사라집니다.</p>
+          <ul class="mt-4 space-y-2 text-sm text-slate-200">
+            <li>• 영상 구간에 메모</li>
+            <li>• 강의 내 키워드 검색</li>
+            <li>• 노트 내보내기</li>
+          </ul>
+        </div>
+
+        <div class="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div class="text-lg font-semibold">퀴즈 & 수료</div>
+          <p class="mt-2 text-sm leading-relaxed text-slate-200">이해도를 즉시 점검하고, 수료증으로 학습 성과를 남깁니다.</p>
+          <ul class="mt-4 space-y-2 text-sm text-slate-200">
+            <li>• 챕터별 퀴즈</li>
+            <li>• 정답/해설 제공</li>
+            <li>• 수료증 발급</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Courses -->
+    <section id="courses" class="mx-auto max-w-6xl px-4 py-14">
+      <div class="flex items-end justify-between gap-6">
+        <div>
+          <h2 class="text-2xl font-semibold tracking-tight md:text-3xl">지금 인기 있는 강의</h2>
+          <p class="mt-2 text-slate-200">카테고리/난이도/목표에 맞게 빠르게 선택하세요.</p>
+        </div>
+        <div class="hidden items-center gap-2 md:flex">
+          <span class="text-sm text-slate-300">필터:</span>
+          <button class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm hover:bg-white/10">입문</button>
+          <button class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm hover:bg-white/10">실무</button>
+          <button class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm hover:bg-white/10">자격/시험</button>
+        </div>
+      </div>
+
+      <div class="mt-8 grid gap-4 md:grid-cols-3">
+        <!-- Card 1 -->
+        <article class="rounded-3xl border border-white/10 bg-white/5 overflow-hidden">
+          <div class="aspect-[16/10] bg-gradient-to-r from-indigo-500/30 to-slate-900/60"></div>
+          <div class="p-6">
+            <div class="flex items-center justify-between">
+              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200">데이터 · 실무</span>
+              <span class="text-xs text-slate-300">2h 10m</span>
+            </div>
+            <h3 class="mt-3 text-lg font-semibold">현업 개선 프로젝트를 위한 데이터 분석</h3>
+            <p class="mt-2 text-sm text-slate-200">문제 정의 → 지표 설계 → 개선안 검증까지 한 번에.</p>
+            <div class="mt-4 flex items-center justify-between text-sm text-slate-200">
+              <span>평점 4.9</span>
+              <button class="rounded-xl bg-white px-4 py-2 font-semibold text-slate-950 hover:bg-slate-100">상세 보기</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="rounded-3xl border border-white/10 bg-white/5 overflow-hidden">
+          <div class="aspect-[16/10] bg-gradient-to-r from-fuchsia-500/30 to-slate-900/60"></div>
+          <div class="p-6">
+            <div class="flex items-center justify-between">
+              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200">기획 · 커리어</span>
+              <span class="text-xs text-slate-300">3h 05m</span>
+            </div>
+            <h3 class="mt-3 text-lg font-semibold">성과로 설득하는 기획서/보고서</h3>
+            <p class="mt-2 text-sm text-slate-200">한 장으로 정리하고, 숫자로 설득하는 구조를 만듭니다.</p>
+            <div class="mt-4 flex items-center justify-between text-sm text-slate-200">
+              <span>평점 4.8</span>
+              <button class="rounded-xl bg-white px-4 py-2 font-semibold text-slate-950 hover:bg-slate-100">상세 보기</button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="rounded-3xl border border-white/10 bg-white/5 overflow-hidden">
+          <div class="aspect-[16/10] bg-gradient-to-r from-emerald-500/25 to-slate-900/60"></div>
+          <div class="p-6">
+            <div class="flex items-center justify-between">
+              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200">개발 · 입문</span>
+              <span class="text-xs text-slate-300">4h 20m</span>
+            </div>
+            <h3 class="mt-3 text-lg font-semibold">처음 시작하는 웹 개발 로드맵</h3>
+            <p class="mt-2 text-sm text-slate-200">기초부터 배포까지, 한 코스로 흐름을 잡습니다.</p>
+            <div class="mt-4 flex items-center justify-between text-sm text-slate-200">
+              <span>평점 4.7</span>
+              <button class="rounded-xl bg-white px-4 py-2 font-semibold text-slate-950 hover:bg-slate-100">상세 보기</button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Reviews -->
+    <section id="reviews" class="mx-auto max-w-6xl px-4 py-14">
+      <div>
+        <h2 class="text-2xl font-semibold tracking-tight md:text-3xl">수강생이 말하는 변화</h2>
+        <p class="mt-2 text-slate-200">현장에서 바로 적용 가능한 형태로 학습 경험을 설계했습니다.</p>
+      </div>
+
+      <div class="mt-8 grid gap-4 md:grid-cols-3">
+        <figure class="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div class="text-sm text-slate-200">★★★★★</div>
+          <blockquote class="mt-3 text-sm leading-relaxed text-slate-200">
+            “배속+구간 반복+노트 조합이 미쳤습니다. 주말 6시간 학습이 3시간으로 줄었고,
+            팀 공유 노트로 회의가 빨라졌어요.”
+          </blockquote>
+          <figcaption class="mt-4 text-xs text-slate-300">제조/공정 · 3년차</figcaption>
+        </figure>
+
+        <figure class="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div class="text-sm text-slate-200">★★★★★</div>
+          <blockquote class="mt-3 text-sm leading-relaxed text-slate-200">
+            “강의가 ‘좋은 말’로 끝나는 게 아니라 과제/퀴즈로 바로 확인됩니다.
+            완주율이 올라가니 체감 성장이 확실해요.”
+          </blockquote>
+          <figcaption class="mt-4 text-xs text-slate-300">데이터 · 전환 준비</figcaption>
+        </figure>
+
+        <figure class="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div class="text-sm text-slate-200">★★★★☆</div>
+          <blockquote class="mt-3 text-sm leading-relaxed text-slate-200">
+            “팀 플랜으로 온보딩 커리큘럼을 만들었더니 신규 입사자 적응 시간이 줄었습니다.
+            관리자 리포트가 특히 유용해요.”
+          </blockquote>
+          <figcaption class="mt-4 text-xs text-slate-300">리더 · 팀 운영</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="mx-auto max-w-6xl px-4 py-14">
+      <div class="flex items-end justify-between gap-6">
+        <div>
+          <h2 class="text-2xl font-semibold tracking-tight md:text-3xl">가격 플랜</h2>
+          <p class="mt-2 text-slate-200">개인부터 팀까지, 운영 방식에 맞게 선택하세요.</p>
+        </div>
+        <div class="text-sm text-slate-300">VAT 별도 · 언제든 해지 가능</div>
+      </div>
+
+      <div class="mt-8 grid gap-4 md:grid-cols-3">
+        <div class="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div class="text-lg font-semibold">Single</div>
+          <p class="mt-2 text-sm text-slate-200">필요한 강의만 선택 구매</p>
+          <div class="mt-5 text-3xl font-semibold">₩29,000~</div>
+          <ul class="mt-5 space-y-2 text-sm text-slate-200">
+            <li>• 강의 단건 구매</li>
+            <li>• 영구 소장(정책에 따라)</li>
+            <li>• 기본 플레이어</li>
+          </ul>
+          <a href="#cta" class="mt-6 inline-flex w-full justify-center rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-semibold hover:bg-white/10">
+            강의 구매
+          </a>
+        </div>
+
+        <div class="rounded-3xl border border-white/10 bg-white p-6 text-slate-950 shadow-2xl">
+          <div class="flex items-center justify-between">
+            <div class="text-lg font-semibold">Pro (추천)</div>
+            <span class="rounded-full bg-slate-950 px-3 py-1 text-xs font-semibold text-white">7일 무료</span>
+          </div>
+          <p class="mt-2 text-sm text-slate-700">대부분의 수강생이 선택</p>
+          <div class="mt-5 text-3xl font-semibold">₩19,900<span class="text-base font-medium text-slate-700">/월</span></div>
+          <ul class="mt-5 space-y-2 text-sm text-slate-800">
+            <li>• 무제한 수강</li>
+            <li>• 자막/배속/구간반복</li>
+            <li>• 노트/검색/퀴즈</li>
+            <li>• 수료증 발급</li>
+          </ul>
+          <a href="#cta" class="mt-6 inline-flex w-full justify-center rounded-2xl bg-slate-950 px-5 py-3 font-semibold text-white hover:bg-slate-900">
+            Pro 시작하기
+          </a>
+        </div>
+
+        <div class="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div class="text-lg font-semibold">Team</div>
+          <p class="mt-2 text-sm text-slate-200">조직 학습/온보딩 운영</p>
+          <div class="mt-5 text-3xl font-semibold">맞춤 견적</div>
+          <ul class="mt-5 space-y-2 text-sm text-slate-200">
+            <li>• 관리자 대시보드</li>
+            <li>• 팀 커리큘럼/과제</li>
+            <li>• 수강 리포트/완주율</li>
+            <li>• SSO/보안 옵션(선택)</li>
+          </ul>
+          <a href="#cta" class="mt-6 inline-flex w-full justify-center rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-semibold hover:bg-white/10">
+            팀 문의
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="mx-auto max-w-6xl px-4 py-14">
+      <div>
+        <h2 class="text-2xl font-semibold tracking-tight md:text-3xl">자주 묻는 질문</h2>
+        <p class="mt-2 text-slate-200">도입 전에 가장 많이 확인하는 항목을 정리했습니다.</p>
+      </div>
+
+      <div class="mt-8 grid gap-4 md:grid-cols-2">
+        <details class="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <summary class="cursor-pointer text-base font-semibold">무료 체험은 어떻게 진행되나요?</summary>
+          <p class="mt-3 text-sm text-slate-200">
+            가입 후 7일 동안 Pro 기능을 동일하게 사용합니다. 체험 종료 전 해지하면 과금되지 않습니다.
+          </p>
+        </details>
+
+        <details class="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <summary class="cursor-pointer text-base font-semibold">강의는 모바일에서도 보기 편한가요?</summary>
+          <p class="mt-3 text-sm text-slate-200">
+            반응형 플레이어와 단축 기능(배속/자막/북마크)을 제공하며, 이어보기로 학습 흐름을 유지합니다.
+          </p>
+        </details>
+
+        <details class="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <summary class="cursor-pointer text-base font-semibold">환불/해지 정책은 어떻게 되나요?</summary>
+          <p class="mt-3 text-sm text-slate-200">
+            구독은 언제든 해지 가능하며, 결제 주기 종료까지 이용할 수 있습니다. 단건 구매 환불은 정책에 따릅니다.
+          </p>
+        </details>
+
+        <details class="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <summary class="cursor-pointer text-base font-semibold">팀 플랜은 어떤 조직에 적합한가요?</summary>
+          <p class="mt-3 text-sm text-slate-200">
+            온보딩/직무 교육/사내 인증 체계를 운영하는 조직에 적합합니다. 커리큘럼 관리와 리포트를 제공합니다.
+          </p>
+        </details>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="cta" class="mx-auto max-w-6xl px-4 pb-20">
+      <div class="rounded-3xl border border-white/10 bg-gradient-to-r from-white/10 to-white/5 p-8 md:p-10">
+        <div class="grid items-center gap-8 md:grid-cols-2">
+          <div>
+            <h2 class="text-2xl font-semibold tracking-tight md:text-3xl">오늘부터 학습을 ‘완주’로 바꾸세요</h2>
+            <p class="mt-2 text-slate-200">
+              무료 체험으로 플레이어/노트/퀴즈를 직접 확인해보세요. 팀 도입은 데모로 안내드립니다.
+            </p>
+            <ul class="mt-5 space-y-2 text-sm text-slate-200">
+              <li>• 7일 무료 체험</li>
+              <li>• 카드 등록 후 즉시 시작</li>
+              <li>• 체험 종료 전 해지 가능</li>
+            </ul>
+          </div>
+
+          <form class="rounded-3xl border border-white/10 bg-slate-950/40 p-6">
+            <label class="block text-sm font-semibold">이메일</label>
+            <input type="email" placeholder="name@company.com"
+              class="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-white/30" />
+            <label class="mt-4 block text-sm font-semibold">관심 분야</label>
+            <select class="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-white/30">
+              <option>데이터/분석</option>
+              <option>기획/문서</option>
+              <option>개발/IT</option>
+              <option>제조/공정</option>
+              <option>자격/시험</option>
+            </select>
+            <button type="button"
+              class="mt-5 w-full rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-slate-100">
+              무료 체험 신청
+            </button>
+            <p class="mt-3 text-xs text-slate-300">
+              신청 시 이용약관/개인정보 처리방침에 동의한 것으로 간주됩니다.
+            </p>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/10">
+      <div class="mx-auto max-w-6xl px-4 py-10">
+        <div class="grid gap-6 md:grid-cols-4">
+          <div>
+            <div class="text-lg font-semibold">VOD Academy</div>
+            <p class="mt-2 text-sm text-slate-300">실무형 VOD 학습 플랫폼</p>
+          </div>
+          <div class="text-sm text-slate-300">
+            <div class="font-semibold text-slate-200">제품</div>
+            <ul class="mt-3 space-y-2">
+              <li><a class="hover:text-white" href="#features">기능</a></li>
+              <li><a class="hover:text-white" href="#courses">강의</a></li>
+              <li><a class="hover:text-white" href="#pricing">가격</a></li>
+            </ul>
+          </div>
+          <div class="text-sm text-slate-300">
+            <div class="font-semibold text-slate-200">회사</div>
+            <ul class="mt-3 space-y-2">
+              <li><a class="hover:text-white" href="#">소개</a></li>
+              <li><a class="hover:text-white" href="#">채용</a></li>
+              <li><a class="hover:text-white" href="#">문의</a></li>
+            </ul>
+          </div>
+          <div class="text-sm text-slate-300">
+            <div class="font-semibold text-slate-200">지원</div>
+            <ul class="mt-3 space-y-2">
+              <li><a class="hover:text-white" href="#faq">FAQ</a></li>
+              <li><a class="hover:text-white" href="#">이용약관</a></li>
+              <li><a class="hover:text-white" href="#">개인정보 처리방침</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="mt-10 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-slate-400 md:flex-row md:items-center md:justify-between">
+          <span>© <span id="year"></span> VOD Academy. All rights reserved.</span>
+          <span>사업자정보 · 통신판매업 · 고객센터 0000-0000</span>
+        </div>
+      </div>
+    </footer>
   </main>
 
   <script>
-    // --- State ---
-    let allData = { long: [], short: [] };
-    let tradeType = 'buy'; // 'buy' | 'sell'
-    let investorType = 'all'; // 'all' | 'long' | 'short'
-    let selectedStock = null;
-    let currentPE = 15;
+    const btn = document.getElementById('menuBtn');
+    const menu = document.getElementById('mobileMenu');
+    btn?.addEventListener('click', () => menu.classList.toggle('hidden'));
 
-    // --- DOM Elements ---
-    const rowsEl = document.getElementById('stockRows');
-    const headlineEl = document.getElementById('headline');
-    const pTicker = document.getElementById('pTicker');
-    const pTarget = document.getElementById('pTarget');
-    const pUpside = document.getElementById('pUpside');
-    const pPE = document.getElementById('pPE');
-    const peSlider = document.getElementById('peSlider');
-    const holderList = document.getElementById('holderList');
-
-    // --- Logic ---
-    async function fetchData() {
-      try {
-        const [longRes, shortRes] = await Promise.all([
-          fetch('/top5_long.json').then(r => r.json()),
-          fetch('/top5_short.json').then(r => r.json())
-        ]);
-        
-        allData.long = longRes.top5_new_buyers || longRes.top5_sellers || [];
-        allData.short = shortRes.top5_new_buyers || shortRes.top5_sellers || [];
-        
-        // 데이터 매핑 시 JSON 키값을 실제 변수로 연결 (수정 포인트!)
-        allData.long = processRows(longRes, 'long');
-        allData.short = processRows(shortRes, 'short');
-
-        document.getElementById('updateTime').textContent = `Last Updated: ${new Date().toLocaleDateString()}`;
-        render();
-      } catch (err) {
-        console.error("Data Load Error:", err);
-        rowsEl.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:40px; color:red;">Failed to load JSON data. Make sure files are in the root directory.</td></tr>';
-      }
-    }
-
-    function processRows(json, type) {
-      const source = tradeType === 'buy' ? (json.top5_new_buyers || []) : (json.top5_sellers || []);
-      return source.map(row => ({
-        ticker: row.ticker || row.symbol || 'N/A',
-        name: row.name || row.issuer || 'Unknown Company',
-        holders: row.holders || (Number(row.new_buyers || 0) + Number(row.sellers || 0)),
-        new: row.new_buyers || 0,
-        sell: row.sellers || 0,
-        avgCost: row.avg_price || row.avg_cost || 0,
-        currentPrice: row.current_price || row.price || 150, // Fallback for simulation
-        fairValue: row.fair_value || 180,
-        eps: row.eps || 5.5,
-        per: row.per || row.pe_ratio || 15,
-        grade: row.grade || 'B+',
-        type: type,
-        topHolders: row.top_holders || [
-          { name: 'Institutional Alpha', type: 'Long', status: 'Increased' },
-          { name: 'Global Asset Mgt', type: 'Long', status: 'New' }
-        ]
-      }));
-    }
-
-    function render() {
-      // 1. Update Headline
-      headlineEl.textContent = `${tradeType.toUpperCase()} Momentum: ${investorType.toUpperCase()} Investors`;
-      
-      // 2. Filter List
-      let displayList = [];
-      if (investorType === 'all') displayList = [...allData.long, ...allData.short];
-      else if (investorType === 'long') displayList = allData.long;
-      else displayList = allData.short;
-
-      // Sort and slice top 5
-      displayList.sort((a, b) => b.new - a.new || b.sell - a.sell);
-      displayList = displayList.slice(0, 5);
-
-      // 3. Render Table
-      rowsEl.innerHTML = '';
-      displayList.forEach((s, i) => {
-        const tr = document.createElement('tr');
-        if (selectedStock && selectedStock.ticker === s.ticker) tr.className = 'selected';
-        
-        tr.onclick = () => {
-          selectedStock = s;
-          currentPE = s.per;
-          peSlider.value = currentPE;
-          render();
-        };
-
-        tr.innerHTML = `
-          <td class="rank mono">${i + 1}</td>
-          <td>
-            <div style="display:flex; align-items:center;">
-              <span class="ticker">${s.ticker}</span>
-              <span class="pill ${s.type}">${s.type === 'long' ? 'L' : 'S'}</span>
-            </div>
-            <div style="font-size:10px; color:var(--muted); font-weight:700; text-transform:uppercase; margin-top:2px;">${s.name}</div>
-          </td>
-          <td>
-            <div class="mono" style="font-weight:700; font-size:13px;">${s.holders} <span style="color:var(--muted); font-weight:400; margin:0 4px;">/</span> <span style="color:var(--ok)">+${s.new}</span> <span style="color:var(--muted); font-weight:400; margin:0 4px;">/</span> <span style="color:var(--danger)">-${s.sell}</span></div>
-          </td>
-          <td class="mono" style="text-align:center; color:var(--muted);">$${Number(s.avgCost).toFixed(2)}</td>
-          <td class="mono" style="text-align:center; font-weight:700; color:var(--link);">$${Number(s.fairValue).toFixed(2)}</td>
-          <td><div class="rating ${s.grade.startsWith('A')?'a':'b'}">${s.grade}</div></td>
-        `;
-        rowsEl.appendChild(tr);
-      });
-
-      if (!selectedStock && displayList.length > 0) {
-        selectedStock = displayList[0];
-        currentPE = selectedStock.per;
-        peSlider.value = currentPE;
-      }
-
-      updatePanel();
-    }
-
-    function updatePanel() {
-      if (!selectedStock) return;
-      
-      const target = selectedStock.eps * currentPE;
-      const upside = ((target - selectedStock.currentPrice) / selectedStock.currentPrice) * 100;
-
-      pTicker.textContent = `${selectedStock.ticker} Analyst`;
-      pTarget.textContent = `$${target.toFixed(2)}`;
-      pPE.textContent = `${Number(currentPE).toFixed(1)}x`;
-      
-      pUpside.textContent = `${upside >= 0 ? '▲' : '▼'} ${Math.abs(upside).toFixed(1)}%`;
-      pUpside.className = `badge mono ${upside >= 0 ? 'up' : 'down'}`;
-
-      holderList.innerHTML = '';
-      selectedStock.topHolders.forEach(h => {
-        const div = document.createElement('div');
-        div.className = 'holder-card';
-        div.innerHTML = `
-          <div>
-            <div class="holder-name">${h.name}</div>
-            <div style="font-size:9px; font-weight:700; color:var(--muted);">${h.type}</div>
-          </div>
-          <div style="font-size:10px; font-weight:800; color:var(--link);">${h.status}</div>
-        `;
-        holderList.appendChild(div);
-      });
-    }
-
-    // --- Events ---
-    document.getElementById('btnBuy').onclick = () => { tradeType = 'buy'; document.getElementById('btnBuy').className = 'active'; document.getElementById('btnSell').className = ''; fetchData(); };
-    document.getElementById('btnSell').onclick = () => { tradeType = 'sell'; document.getElementById('btnSell').className = 'active'; document.getElementById('btnBuy').className = ''; fetchData(); };
-    
-    document.getElementById('fltAll').onclick = () => { investorType = 'all'; updateChips('fltAll'); render(); };
-    document.getElementById('fltLong').onclick = () => { investorType = 'long'; updateChips('fltLong'); render(); };
-    document.getElementById('fltShort').onclick = () => { investorType = 'short'; updateChips('fltShort'); render(); };
-
-    function updateChips(id) {
-      ['fltAll', 'fltLong', 'fltShort'].forEach(c => document.getElementById(c).className = (c === id ? 'active' : ''));
-    }
-
-    peSlider.oninput = (e) => {
-      currentPE = e.target.value;
-      updatePanel();
-    };
-
-    // --- Start ---
-    fetchData();
-
+    document.getElementById('year').textContent = new Date().getFullYear();
   </script>
 </body>
 </html>
