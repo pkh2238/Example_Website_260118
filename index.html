@@ -1,516 +1,1160 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>VOD 강의 플랫폼 - 랜딩</title>
-  <meta name="description" content="실무에 바로 쓰는 VOD 강의. 자막·배속·노트·퀴즈로 학습 효율을 극대화하세요."/>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BIG HANDS Intelligence (Static)</title>
+
+  <!-- Fonts (원본 컨셉 유지: Inter + Mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    /* 부드러운 스크롤 */
-    html { scroll-behavior: smooth; }
+    :root{
+      --bg: #FBFBFC;
+      --text: #334155;
+      --muted: #94a3b8;
+      --border: #e2e8f0;
+      --card: #ffffff;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --shadow-soft: 0 6px 18px rgba(15, 23, 42, 0.06);
+
+      /* theme variables (buy/sell로 바뀜) */
+      --themeDark: #0F172A;
+      --themeAccent: #ea580c; /* buy default: orange-600 */
+      --themeAccentSoft: rgba(234, 88, 12, 0.10);
+      --danger: #e11d48;
+      --ok: #10b981;
+      --link: #2563eb;
+    }
+
+    *{ box-sizing: border-box; }
+    body{
+      margin:0;
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      letter-spacing: -0.01em;
+    }
+    .mono{ font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-variant-numeric: tabular-nums; }
+    .container{ max-width: 1600px; margin: 0 auto; padding: 0 24px; }
+    .topbar{
+      background: var(--themeDark);
+      color: #fff;
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 10px 0;
+    }
+    .topbar .row{ display:flex; justify-content: space-between; align-items:center; gap:16px; }
+    .dot{ width:6px; height:6px; border-radius:999px; background: var(--ok); display:inline-block; margin-right:8px; }
+    .topbar .right a{ color: rgba(255,255,255,0.75); text-decoration:none; margin-left:18px; }
+    .topbar .right a:hover{ color:#fff; }
+
+    header{
+      position: sticky; top:0; z-index: 30;
+      background: var(--card);
+      border-bottom: 1px solid rgba(226,232,240,0.6);
+    }
+    header .row{
+      height: 64px;
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 16px;
+    }
+
+    .brand{ display:flex; align-items:center; gap:12px; cursor:pointer; user-select:none; }
+    .logo{
+      width: 36px; height: 36px; border-radius: 10px;
+      background: var(--themeDark);
+      display:flex; align-items:center; justify-content:center;
+      color:#fff;
+      box-shadow: 0 6px 14px rgba(15,23,42,0.18);
+      font-weight: 900;
+    }
+    .brandname{
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: #0f172a;
+      font-size: 18px;
+      line-height: 1;
+    }
+    .brandname span{ color: var(--themeAccent); }
+
+    .nav{ display:none; gap: 28px; font-size: 13px; font-weight: 700; color: #94a3b8; }
+    .nav a{ color: inherit; text-decoration:none; padding: 22px 0; border-bottom: 2px solid transparent; }
+    .nav a.active{ color:#0f172a; border-bottom-color:#0f172a; }
+    .nav a:hover{ color:#0f172a; }
+    @media (min-width: 1280px){
+      .nav{ display:flex; }
+    }
+
+    .actions{ display:flex; align-items:center; gap: 12px; }
+    .searchwrap{ position: relative; display:none; }
+    @media (min-width: 768px){
+      .searchwrap{ display:block; }
+    }
+    .searchwrap input{
+      background: #f8fafc;
+      border: 1px solid rgba(226,232,240,0.8);
+      border-radius: 10px;
+      padding: 8px 12px 8px 34px;
+      font-size: 13px;
+      width: 180px;
+      outline: none;
+      transition: width 200ms ease, background 200ms ease;
+    }
+    .searchwrap input:focus{
+      background: #fff;
+      width: 260px;
+    }
+    .searchicon{
+      position:absolute; left: 10px; top: 9px;
+      font-size: 12px; color: #cbd5e1;
+    }
+
+    .btn{
+      border: 1px solid rgba(226,232,240,0.8);
+      background: #f8fafc;
+      color:#0f172a;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      cursor:pointer;
+    }
+    .btn:hover{ background:#fff; }
+    .btn.pro{
+      background: var(--themeAccent);
+      border-color: transparent;
+      color:#fff;
+      padding: 10px 16px;
+      box-shadow: 0 14px 30px rgba(37,99,235,0.0);
+    }
+    .btn.pro:hover{ filter: brightness(1.05); }
+    .btn.icon{ padding: 10px 12px; font-size: 16px; line-height: 1; }
+
+    main{ padding: 32px 0; }
+    .layout{ display:flex; flex-direction:column; gap: 24px; align-items: stretch; }
+    @media (min-width: 1024px){
+      .layout{ flex-direction: row; align-items: flex-start; }
+      .left{ width: 70%; }
+      .right{ width: 30%; position: sticky; top: 96px; }
+    }
+
+    .controls{
+      display:flex; flex-wrap: wrap; gap: 12px;
+      justify-content: space-between; align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .seg{
+      display:flex; gap: 6px;
+      background: rgba(226,232,240,0.7);
+      border-radius: 14px;
+      padding: 6px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
+    }
+    .seg button{
+      border:0;
+      cursor:pointer;
+      background: transparent;
+      padding: 10px 14px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: #94a3b8;
+      display:flex;
+      align-items:center;
+      gap: 8px;
+    }
+    .seg button.active{
+      background:#fff;
+      color: var(--themeAccent);
+      box-shadow: 0 6px 16px rgba(15,23,42,0.06);
+    }
+
+    .chips{
+      display:flex;
+      gap: 6px;
+      padding: 4px;
+      border-radius: 12px;
+      background: #f8fafc;
+      border: 1px solid rgba(226,232,240,0.7);
+    }
+    .chips button{
+      border:0;
+      cursor:pointer;
+      background: transparent;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #94a3b8;
+    }
+    .chips button.active{
+      background:#fff;
+      color:#0f172a;
+      box-shadow: 0 1px 0 rgba(15,23,42,0.04);
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid rgba(226,232,240,0.7);
+      border-radius: 18px;
+      box-shadow: var(--shadow-soft);
+    }
+    .hero{
+      padding: 16px 16px;
+      display:flex; justify-content: space-between; align-items: center; gap: 12px;
+      margin-bottom: 12px;
+    }
+    .hero .leftside{ display:flex; align-items:center; gap: 14px; }
+    .herobadge{
+      width: 44px; height: 44px; border-radius: 14px;
+      background: rgba(15, 23, 42, 0.04);
+      border: 1px solid rgba(226,232,240,0.6);
+      display:flex; align-items:center; justify-content:center;
+      font-weight: 900;
+      color: var(--themeAccent);
+    }
+    .hero h2{
+      margin:0;
+      font-size: 18px;
+      font-weight: 900;
+      color: #1f2937;
+      letter-spacing: -0.02em;
+    }
+    .sub{
+      margin-top: 3px;
+      font-size: 10px;
+      font-weight: 900;
+      color: #cbd5e1;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+    .btn.small{
+      padding: 8px 10px;
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: none;
+      border-radius: 10px;
+    }
+
+    .tablewrap{ overflow:auto; border-top-left-radius: 18px; border-top-right-radius: 18px; }
+    table{ width: 100%; min-width: 760px; border-collapse: collapse; }
+    thead th{
+      background:#f8fafc;
+      color:#cbd5e1;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 16px;
+      border-bottom: 1px solid rgba(226,232,240,0.7);
+      text-align:left;
+    }
+    tbody td{
+      padding: 16px;
+      border-bottom: 1px solid rgba(226,232,240,0.35);
+      vertical-align: middle;
+    }
+    tbody tr{ cursor:pointer; transition: background 120ms ease; }
+    tbody tr:hover{ background: rgba(226,232,240,0.22); }
+    tbody tr.selected{
+      background: var(--themeAccentSoft);
+      border-left: 4px solid var(--themeAccent);
+    }
+    .rank{ text-align:center; color:#e2e8f0; font-weight: 900; }
+    .ticker{ font-weight: 900; font-size: 14px; color:#334155; }
+    .pill{
+      display:inline-flex; align-items:center; justify-content:center;
+      width: 18px; height: 18px;
+      border-radius: 6px;
+      font-size: 9px; font-weight: 900;
+      margin-left: 8px;
+      text-transform: uppercase;
+    }
+    .pill.long{ background:#0f172a; color:#fff; }
+    .pill.short{ background:#e2e8f0; color:#475569; }
+    .name{ font-size: 10px; font-weight: 800; color:#cbd5e1; letter-spacing: 0.08em; text-transform: uppercase; max-width: 240px; white-space: nowrap; overflow:hidden; text-overflow: ellipsis; }
+    .holders .delta{ margin-left: 10px; font-size: 11px; font-weight: 900; opacity: 0.8; }
+    .up{ color: var(--ok); }
+    .down{ color: var(--danger); }
+    .rating{
+      width: 34px; height: 34px; border-radius: 10px;
+      display:flex; align-items:center; justify-content:center;
+      font-size: 11px; font-weight: 900;
+      border: 1px solid rgba(226,232,240,0.8);
+      margin: 0 auto;
+    }
+    .rating.a{ background: var(--ok); color:#fff; border-color: var(--ok); }
+    .rating.b{ background: rgba(16,185,129,0.08); color: var(--ok); border-color: rgba(16,185,129,0.22); }
+    .rating.other{ background: #f8fafc; color:#cbd5e1; border-color: rgba(226,232,240,0.8); }
+
+    /* Right panel */
+    .panel{
+      overflow:hidden;
+      border-radius: 26px;
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+    .panelHead{
+      padding: 22px;
+      background: var(--themeDark);
+      color:#fff;
+      position: relative;
+    }
+    .panelHead h3{
+      margin:0;
+      font-size: 18px;
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+    .panelHead .trend{
+      margin-top: 6px;
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(148,163,184,0.9);
+      font-style: italic;
+    }
+    .close{
+      position:absolute; right: 14px; top: 12px;
+      width: 34px; height: 34px; border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.08);
+      color: rgba(255,255,255,0.8);
+      cursor:pointer;
+    }
+    .close:hover{ background: rgba(255,255,255,0.12); }
+
+    .panelBody{ padding: 22px; }
+    .grid3{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .mini{
+      border-radius: 16px;
+      border: 1px solid rgba(226,232,240,0.7);
+      background: rgba(248,250,252,0.7);
+      padding: 12px;
+      text-align:center;
+    }
+    .mini .k{ font-size: 9px; font-weight: 900; color:#cbd5e1; letter-spacing: 0.16em; text-transform: uppercase; }
+    .mini .v{ margin-top: 8px; font-size: 14px; font-weight: 900; color:#475569; }
+
+    .section{ margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(226,232,240,0.6); }
+    .rowBetween{ display:flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .live{
+      font-size: 10px; font-weight: 900;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color:#cbd5e1;
+      display:flex; align-items:center;
+    }
+    .pulse{
+      width: 8px; height: 8px; border-radius: 999px;
+      background: var(--ok);
+      display:inline-block;
+      margin-right: 8px;
+      box-shadow: 0 0 0 0 rgba(16,185,129,0.35);
+      animation: pulse 1.6s infinite;
+    }
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(16,185,129,0.35); }
+      70%{ box-shadow: 0 0 0 10px rgba(16,185,129,0.0); }
+      100%{ box-shadow: 0 0 0 0 rgba(16,185,129,0.0); }
+    }
+    .price{ font-size: 28px; font-weight: 600; color:#334155; margin-top: 6px; }
+    .badge{
+      border-radius: 12px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 900;
+      border: 1px solid rgba(226,232,240,0.7);
+      background: rgba(248,250,252,0.9);
+    }
+    .badge.good{ color: var(--ok); background: rgba(16,185,129,0.10); border-color: rgba(16,185,129,0.22); }
+    .badge.bad{ color: var(--danger); background: rgba(225,29,72,0.10); border-color: rgba(225,29,72,0.20); }
+
+    .biglabel{ font-size: 10px; font-weight: 900; color:#cbd5e1; letter-spacing: 0.16em; text-transform: uppercase; }
+    .target{ font-size: 34px; font-weight: 600; color: var(--link); margin-top: 6px; }
+    .muted{ color:#94a3b8; }
+    .sliderRow{ margin-top: 12px; }
+    input[type="range"]{ width:100%; }
+
+    .cta{
+      margin-top: 14px;
+      width:100%;
+      border:0;
+      border-radius: 18px;
+      background: #0f172a;
+      color:#fff;
+      font-weight: 900;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      padding: 16px 14px;
+      cursor:pointer;
+      box-shadow: 0 18px 40px rgba(15,23,42,0.18);
+    }
+    .cta:hover{ background:#111827; }
+    .holdersTitle{
+      display:flex; align-items:center; gap: 8px;
+      font-size: 10px; font-weight: 900;
+      color:#94a3b8; letter-spacing: 0.16em; text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .holderItem{
+      display:flex; justify-content: space-between; align-items: center;
+      padding: 10px 10px;
+      border-radius: 16px;
+      border: 1px solid rgba(226,232,240,0.6);
+      background: rgba(248,250,252,0.7);
+      margin-bottom: 10px;
+      transition: background 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+    }
+    .holderItem:hover{
+      background:#fff;
+      box-shadow: 0 10px 26px rgba(15,23,42,0.06);
+      transform: translateY(-1px);
+    }
+    .holderName{
+      font-size: 11px; font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      color:#334155;
+      max-width: 190px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    }
+    .holderType{ font-size: 10px; font-weight: 800; margin-top: 4px; }
+    .tLong{ color: var(--ok); }
+    .tShort{ color: #f59e0b; }
+
+    .status{
+      font-size: 10px; font-weight: 900;
+      padding: 6px 8px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border: 1px solid rgba(226,232,240,0.7);
+      background: rgba(248,250,252,0.9);
+    }
+    .stNew{ color: var(--link); background: rgba(37,99,235,0.12); border-color: rgba(37,99,235,0.20); }
+    .stInc{ color: var(--ok); background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.22); }
+    .stDec{ color: var(--danger); background: rgba(225,29,72,0.10); border-color: rgba(225,29,72,0.20); }
+    .stMaint{ color: #64748b; background: rgba(100,116,139,0.12); border-color: rgba(100,116,139,0.22); }
+
+    footer{
+      border-top: 1px solid rgba(226,232,240,0.5);
+      margin-top: 34px;
+      padding: 34px 0;
+      color:#94a3b8;
+      font-size: 11px;
+    }
+    footer .row{ display:flex; flex-direction: column; gap: 10px; align-items: center; text-align:center; }
+    @media (min-width: 768px){
+      footer .row{ flex-direction: row; justify-content: space-between; text-align:left; }
+    }
+    footer a{ color:#94a3b8; text-decoration:none; font-weight: 800; }
+    footer a:hover{ color:#0f172a; }
+
+    .hide{ display:none !important; }
   </style>
 </head>
 
-<body class="bg-slate-950 text-slate-50">
-  <!-- Background accents -->
-  <div class="pointer-events-none fixed inset-0 overflow-hidden">
-    <div class="absolute -top-40 -left-40 h-[520px] w-[520px] rounded-full bg-indigo-500/20 blur-3xl"></div>
-    <div class="absolute top-40 -right-40 h-[520px] w-[520px] rounded-full bg-fuchsia-500/20 blur-3xl"></div>
+<body>
+  <!-- Top Utility Nav -->
+  <div class="topbar">
+    <div class="container">
+      <div class="row">
+        <div>
+          <span class="dot"></span><span>Network: Connected</span>
+          <span style="margin-left:14px; color: rgba(148,163,184,0.85); font-weight:800; letter-spacing: 0.06em; font-style: italic;">Big Hands Activity Tracking</span>
+        </div>
+        <div class="right" style="display:none;">
+          <a href="#">Insights</a>
+          <a href="#">Market Data</a>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <!-- Header -->
-  <header class="sticky top-0 z-50 border-b border-white/10 bg-slate-950/70 backdrop-blur">
-    <div class="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-      <a href="#" class="flex items-center gap-2">
-        <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/10">
-          ▶
-        </span>
-        <span class="text-lg font-semibold tracking-tight">VOD Academy</span>
-      </a>
+  <!-- Main Header -->
+  <header>
+    <div class="container">
+      <div class="row">
+        <div style="display:flex; align-items:center; gap: 18px;">
+          <div class="brand" id="brand">
+            <div class="logo">BH</div>
+            <div class="brandname">BIG<span>HANDS</span></div>
+          </div>
 
-      <nav class="hidden items-center gap-6 text-sm text-slate-200 md:flex">
-        <a href="#features" class="hover:text-white">특징</a>
-        <a href="#courses" class="hover:text-white">강의</a>
-        <a href="#reviews" class="hover:text-white">후기</a>
-        <a href="#pricing" class="hover:text-white">가격</a>
-        <a href="#faq" class="hover:text-white">FAQ</a>
-      </nav>
+          <nav class="nav">
+            <a href="#" class="active">Whale Consensus</a>
+            <a href="#">Investors</a>
+            <a href="#">Institutional Lab</a>
+          </nav>
+        </div>
 
-      <div class="hidden items-center gap-3 md:flex">
-        <button class="rounded-xl px-4 py-2 text-sm text-slate-200 hover:text-white">로그인</button>
-        <a href="#cta" class="rounded-xl bg-white px-4 py-2 text-sm font-semibold text-slate-950 hover:bg-slate-100">
-          7일 무료 체험
-        </a>
-      </div>
+        <div class="actions">
+          <button class="btn icon" id="togglePanel" title="Toggle Panel">⟷</button>
 
-      <button id="menuBtn" class="md:hidden rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm">
-        메뉴
-      </button>
-    </div>
+          <div class="searchwrap">
+            <span class="searchicon">⌕</span>
+            <input id="search" type="text" placeholder="Search Tickers..." />
+          </div>
 
-    <!-- Mobile menu -->
-    <div id="mobileMenu" class="hidden border-t border-white/10 md:hidden">
-      <div class="mx-auto max-w-6xl px-4 py-3 grid gap-2 text-sm text-slate-200">
-        <a href="#features" class="rounded-lg px-3 py-2 hover:bg-white/5">특징</a>
-        <a href="#courses" class="rounded-lg px-3 py-2 hover:bg-white/5">강의</a>
-        <a href="#reviews" class="rounded-lg px-3 py-2 hover:bg-white/5">후기</a>
-        <a href="#pricing" class="rounded-lg px-3 py-2 hover:bg-white/5">가격</a>
-        <a href="#faq" class="rounded-lg px-3 py-2 hover:bg-white/5">FAQ</a>
-        <div class="mt-2 flex gap-2">
-          <button class="flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-2">로그인</button>
-          <a href="#cta" class="flex-1 rounded-xl bg-white px-4 py-2 text-center font-semibold text-slate-950">무료 체험</a>
+          <button class="btn pro" id="proBtn">PRO ACCESS</button>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- Hero -->
-  <main class="relative">
-    <section class="mx-auto max-w-6xl px-4 pt-14 pb-10 md:pt-20">
-      <div class="grid items-center gap-10 md:grid-cols-2">
-        <div>
-          <p class="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs text-slate-200">
-            <span class="h-2 w-2 rounded-full bg-emerald-400"></span>
-            신규 수강생을 위한 웰컴 패키지 제공
-          </p>
-
-          <h1 class="mt-5 text-4xl font-semibold leading-tight tracking-tight md:text-5xl">
-            실무에 바로 쓰는 VOD 강의,
-            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-300 to-fuchsia-300">학습 효율</span>을 끝까지 끌어올리세요.
-          </h1>
-
-          <p class="mt-5 text-base leading-relaxed text-slate-200">
-            자막·배속·구간 반복·노트·퀴즈·수료증까지.
-            “듣는 강의”가 아니라 “완주하는 학습 경험”을 제공합니다.
-          </p>
-
-          <div class="mt-7 flex flex-col gap-3 sm:flex-row">
-            <a href="#cta" class="rounded-2xl bg-white px-6 py-3 text-center font-semibold text-slate-950 hover:bg-slate-100">
-              7일 무료 체험 시작
-            </a>
-            <a href="#courses" class="rounded-2xl border border-white/10 bg-white/5 px-6 py-3 text-center font-semibold text-white hover:bg-white/10">
-              강의 둘러보기
-            </a>
+  <main class="container">
+    <div class="layout">
+      <!-- Left -->
+      <section class="left">
+        <div class="controls">
+          <div class="seg">
+            <button id="btnBuy" class="active" type="button">▲ Top Buys</button>
+            <button id="btnSell" type="button">▼ Top Sells</button>
           </div>
 
-          <div class="mt-7 grid grid-cols-3 gap-3 text-center">
-            <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-              <div class="text-lg font-semibold">4.8/5</div>
-              <div class="text-xs text-slate-300">평균 만족도</div>
-            </div>
-            <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-              <div class="text-lg font-semibold">120K+</div>
-              <div class="text-xs text-slate-300">누적 수강생</div>
-            </div>
-            <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
-              <div class="text-lg font-semibold">3,500+</div>
-              <div class="text-xs text-slate-300">강의 영상</div>
-            </div>
+          <div class="chips">
+            <button id="fltAll" class="active" type="button">all</button>
+            <button id="fltLong" type="button">long</button>
+            <button id="fltShort" type="button">short</button>
           </div>
         </div>
 
-        <!-- Mock player card -->
-        <div class="relative">
-          <div class="rounded-3xl border border-white/10 bg-gradient-to-b from-white/10 to-white/5 p-6 shadow-2xl">
-            <div class="flex items-center justify-between">
-              <div class="text-sm font-semibold">오늘의 추천</div>
-              <div class="text-xs text-slate-300">업데이트: 매주</div>
+        <div class="card hero">
+          <div class="leftside">
+            <div class="herobadge">✋</div>
+            <div>
+              <div class="sub">Big Hands Intelligence</div>
+              <h2 id="headline">BUY Momentum: ALL Institutional Consensus</h2>
+            </div>
+          </div>
+          <button class="btn small" id="expandHint" type="button">Expand Analysis</button>
+        </div>
+
+        <div class="card">
+          <div class="tablewrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style="width:70px; text-align:center;">#</th>
+                  <th>Stock Symbol</th>
+                  <th>Whale Activity (T / + / -)</th>
+                  <th style="text-align:center;">Avg. Cost</th>
+                  <th style="text-align:center;">Fair Value</th>
+                  <th style="text-align:center;">Rating</th>
+                </tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right -->
+      <aside class="right" id="panelWrap">
+        <div class="card panel">
+          <div class="panelHead">
+            <button class="close" id="closePanel" title="Close">×</button>
+            <h3 id="pTicker">GOOGL Analyst</h3>
+            <div class="trend" id="pTrend">Bullish Consensus</div>
+          </div>
+
+          <div class="panelBody">
+            <div class="grid3">
+              <div class="mini">
+                <div class="k">Value</div>
+                <div class="v" id="gValue">A-</div>
+              </div>
+              <div class="mini">
+                <div class="k">Growth</div>
+                <div class="v" id="gGrowth">B+</div>
+              </div>
+              <div class="mini">
+                <div class="k">Safety</div>
+                <div class="v">A+</div>
+              </div>
             </div>
 
-            <div class="mt-5 overflow-hidden rounded-2xl border border-white/10 bg-slate-900/60">
-              <div class="aspect-video w-full bg-gradient-to-r from-indigo-500/30 to-fuchsia-500/30 flex items-center justify-center">
-                <div class="rounded-full bg-white/15 px-5 py-3 ring-1 ring-white/20">
-                  <span class="text-sm font-semibold">▶ 재생 미리보기</span>
+            <div class="section">
+              <div class="rowBetween">
+                <div>
+                  <div class="live"><span class="pulse"></span>Live Market Price</div>
+                  <div class="price mono" id="pPrice">$0.00</div>
+                </div>
+                <div class="badge mono" id="pUpside">▲ 0.0%</div>
+              </div>
+            </div>
+
+            <div class="section">
+              <div class="biglabel">Intrinsic Target</div>
+              <div class="target mono" id="pTarget">$0.00</div>
+
+              <div class="sliderRow">
+                <div class="rowBetween" style="align-items:center;">
+                  <div class="biglabel" style="letter-spacing:0.06em;">P/E Multiple Adjustment</div>
+                  <div class="badge mono" id="pPE">0x</div>
+                </div>
+                <input id="peSlider" type="range" min="-100" max="150" step="0.5" value="0">
+                <div class="muted" style="font-size:12px; margin-top: 8px;">
+                  EPS × P/E = Target. Slider를 움직이면 Target과 Upside가 즉시 계산됩니다.
                 </div>
               </div>
-              <div class="p-4">
-                <div class="flex items-start justify-between gap-3">
-                  <div>
-                    <p class="text-sm font-semibold">데이터로 문제를 정의하고 개선안까지 설계하기</p>
-                    <p class="mt-1 text-xs text-slate-300">중급 · 2시간 40분 · 퀴즈 12개</p>
-                  </div>
-                  <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200">NEW</span>
-                </div>
-                <div class="mt-4">
-                  <div class="h-2 w-full rounded-full bg-white/10">
-                    <div class="h-2 w-2/5 rounded-full bg-white"></div>
-                  </div>
-                  <div class="mt-2 flex justify-between text-xs text-slate-300">
-                    <span>진도 40%</span>
-                    <span>배속 1.25x · 자막 ON</span>
-                  </div>
-                </div>
-              </div>
+
+              <button class="cta" id="ctaBtn" type="button">Set Watchlist</button>
             </div>
 
-            <div class="mt-5 grid grid-cols-3 gap-3 text-xs text-slate-200">
-              <div class="rounded-2xl border border-white/10 bg-white/5 px-3 py-3">
-                <div class="font-semibold">자막/번역</div>
-                <div class="mt-1 text-slate-300">다국어 지원</div>
-              </div>
-              <div class="rounded-2xl border border-white/10 bg-white/5 px-3 py-3">
-                <div class="font-semibold">노트</div>
-                <div class="mt-1 text-slate-300">타임스탬프</div>
-              </div>
-              <div class="rounded-2xl border border-white/10 bg-white/5 px-3 py-3">
-                <div class="font-semibold">퀴즈</div>
-                <div class="mt-1 text-slate-300">즉시 피드백</div>
-              </div>
+            <div class="section">
+              <div class="holdersTitle">👥 Top Big Hands Holders</div>
+              <div id="holders"></div>
+              <button class="btn small" type="button" style="width:100%;">All Holders Details →</button>
             </div>
-          </div>
-        </div>
-      </div>
 
-      <!-- Trust logos -->
-      <div class="mt-12 border-t border-white/10 pt-8">
-        <p class="text-xs text-slate-300">다양한 팀이 함께 학습하고 있습니다</p>
-        <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm text-slate-200">Company A</div>
-          <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm text-slate-200">Company B</div>
-          <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm text-slate-200">Studio C</div>
-          <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-center text-sm text-slate-200">Team D</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Features -->
-    <section id="features" class="mx-auto max-w-6xl px-4 py-14">
-      <div class="flex items-end justify-between gap-6">
-        <div>
-          <h2 class="text-2xl font-semibold tracking-tight md:text-3xl">학습 완주를 돕는 기능</h2>
-          <p class="mt-2 text-slate-200">학습 흐름을 방해하지 않고, 필요한 순간에 바로 쓰는 기능만 담았습니다.</p>
-        </div>
-        <a href="#cta" class="hidden rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm font-semibold hover:bg-white/10 md:inline-flex">
-          기능 데모 요청
-        </a>
-      </div>
-
-      <div class="mt-8 grid gap-4 md:grid-cols-3">
-        <div class="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <div class="text-lg font-semibold">스마트 플레이어</div>
-          <p class="mt-2 text-sm leading-relaxed text-slate-200">배속, 구간 반복, 북마크, 단축키로 학습 시간을 절약합니다.</p>
-          <ul class="mt-4 space-y-2 text-sm text-slate-200">
-            <li>• 0.5x~2.5x 배속</li>
-            <li>• 챕터/구간 반복</li>
-            <li>• 자동 이어보기</li>
-          </ul>
-        </div>
-
-        <div class="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <div class="text-lg font-semibold">노트 & 검색</div>
-          <p class="mt-2 text-sm leading-relaxed text-slate-200">타임스탬프 노트로 “그 부분”을 다시 찾는 시간이 사라집니다.</p>
-          <ul class="mt-4 space-y-2 text-sm text-slate-200">
-            <li>• 영상 구간에 메모</li>
-            <li>• 강의 내 키워드 검색</li>
-            <li>• 노트 내보내기</li>
-          </ul>
-        </div>
-
-        <div class="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <div class="text-lg font-semibold">퀴즈 & 수료</div>
-          <p class="mt-2 text-sm leading-relaxed text-slate-200">이해도를 즉시 점검하고, 수료증으로 학습 성과를 남깁니다.</p>
-          <ul class="mt-4 space-y-2 text-sm text-slate-200">
-            <li>• 챕터별 퀴즈</li>
-            <li>• 정답/해설 제공</li>
-            <li>• 수료증 발급</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- Courses -->
-    <section id="courses" class="mx-auto max-w-6xl px-4 py-14">
-      <div class="flex items-end justify-between gap-6">
-        <div>
-          <h2 class="text-2xl font-semibold tracking-tight md:text-3xl">지금 인기 있는 강의</h2>
-          <p class="mt-2 text-slate-200">카테고리/난이도/목표에 맞게 빠르게 선택하세요.</p>
-        </div>
-        <div class="hidden items-center gap-2 md:flex">
-          <span class="text-sm text-slate-300">필터:</span>
-          <button class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm hover:bg-white/10">입문</button>
-          <button class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm hover:bg-white/10">실무</button>
-          <button class="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm hover:bg-white/10">자격/시험</button>
-        </div>
-      </div>
-
-      <div class="mt-8 grid gap-4 md:grid-cols-3">
-        <!-- Card 1 -->
-        <article class="rounded-3xl border border-white/10 bg-white/5 overflow-hidden">
-          <div class="aspect-[16/10] bg-gradient-to-r from-indigo-500/30 to-slate-900/60"></div>
-          <div class="p-6">
-            <div class="flex items-center justify-between">
-              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200">데이터 · 실무</span>
-              <span class="text-xs text-slate-300">2h 10m</span>
+            <div class="section" id="debugBox" style="display:none;">
+              <div class="biglabel">Debug</div>
+              <div class="mono" id="debugText" style="font-size:12px; color:#94a3b8; margin-top:8px;"></div>
             </div>
-            <h3 class="mt-3 text-lg font-semibold">현업 개선 프로젝트를 위한 데이터 분석</h3>
-            <p class="mt-2 text-sm text-slate-200">문제 정의 → 지표 설계 → 개선안 검증까지 한 번에.</p>
-            <div class="mt-4 flex items-center justify-between text-sm text-slate-200">
-              <span>평점 4.9</span>
-              <button class="rounded-xl bg-white px-4 py-2 font-semibold text-slate-950 hover:bg-slate-100">상세 보기</button>
-            </div>
-          </div>
-        </article>
 
-        <!-- Card 2 -->
-        <article class="rounded-3xl border border-white/10 bg-white/5 overflow-hidden">
-          <div class="aspect-[16/10] bg-gradient-to-r from-fuchsia-500/30 to-slate-900/60"></div>
-          <div class="p-6">
-            <div class="flex items-center justify-between">
-              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200">기획 · 커리어</span>
-              <span class="text-xs text-slate-300">3h 05m</span>
-            </div>
-            <h3 class="mt-3 text-lg font-semibold">성과로 설득하는 기획서/보고서</h3>
-            <p class="mt-2 text-sm text-slate-200">한 장으로 정리하고, 숫자로 설득하는 구조를 만듭니다.</p>
-            <div class="mt-4 flex items-center justify-between text-sm text-slate-200">
-              <span>평점 4.8</span>
-              <button class="rounded-xl bg-white px-4 py-2 font-semibold text-slate-950 hover:bg-slate-100">상세 보기</button>
-            </div>
-          </div>
-        </article>
-
-        <!-- Card 3 -->
-        <article class="rounded-3xl border border-white/10 bg-white/5 overflow-hidden">
-          <div class="aspect-[16/10] bg-gradient-to-r from-emerald-500/25 to-slate-900/60"></div>
-          <div class="p-6">
-            <div class="flex items-center justify-between">
-              <span class="rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200">개발 · 입문</span>
-              <span class="text-xs text-slate-300">4h 20m</span>
-            </div>
-            <h3 class="mt-3 text-lg font-semibold">처음 시작하는 웹 개발 로드맵</h3>
-            <p class="mt-2 text-sm text-slate-200">기초부터 배포까지, 한 코스로 흐름을 잡습니다.</p>
-            <div class="mt-4 flex items-center justify-between text-sm text-slate-200">
-              <span>평점 4.7</span>
-              <button class="rounded-xl bg-white px-4 py-2 font-semibold text-slate-950 hover:bg-slate-100">상세 보기</button>
-            </div>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <!-- Reviews -->
-    <section id="reviews" class="mx-auto max-w-6xl px-4 py-14">
-      <div>
-        <h2 class="text-2xl font-semibold tracking-tight md:text-3xl">수강생이 말하는 변화</h2>
-        <p class="mt-2 text-slate-200">현장에서 바로 적용 가능한 형태로 학습 경험을 설계했습니다.</p>
-      </div>
-
-      <div class="mt-8 grid gap-4 md:grid-cols-3">
-        <figure class="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <div class="text-sm text-slate-200">★★★★★</div>
-          <blockquote class="mt-3 text-sm leading-relaxed text-slate-200">
-            “배속+구간 반복+노트 조합이 미쳤습니다. 주말 6시간 학습이 3시간으로 줄었고,
-            팀 공유 노트로 회의가 빨라졌어요.”
-          </blockquote>
-          <figcaption class="mt-4 text-xs text-slate-300">제조/공정 · 3년차</figcaption>
-        </figure>
-
-        <figure class="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <div class="text-sm text-slate-200">★★★★★</div>
-          <blockquote class="mt-3 text-sm leading-relaxed text-slate-200">
-            “강의가 ‘좋은 말’로 끝나는 게 아니라 과제/퀴즈로 바로 확인됩니다.
-            완주율이 올라가니 체감 성장이 확실해요.”
-          </blockquote>
-          <figcaption class="mt-4 text-xs text-slate-300">데이터 · 전환 준비</figcaption>
-        </figure>
-
-        <figure class="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <div class="text-sm text-slate-200">★★★★☆</div>
-          <blockquote class="mt-3 text-sm leading-relaxed text-slate-200">
-            “팀 플랜으로 온보딩 커리큘럼을 만들었더니 신규 입사자 적응 시간이 줄었습니다.
-            관리자 리포트가 특히 유용해요.”
-          </blockquote>
-          <figcaption class="mt-4 text-xs text-slate-300">리더 · 팀 운영</figcaption>
-        </figure>
-      </div>
-    </section>
-
-    <!-- Pricing -->
-    <section id="pricing" class="mx-auto max-w-6xl px-4 py-14">
-      <div class="flex items-end justify-between gap-6">
-        <div>
-          <h2 class="text-2xl font-semibold tracking-tight md:text-3xl">가격 플랜</h2>
-          <p class="mt-2 text-slate-200">개인부터 팀까지, 운영 방식에 맞게 선택하세요.</p>
-        </div>
-        <div class="text-sm text-slate-300">VAT 별도 · 언제든 해지 가능</div>
-      </div>
-
-      <div class="mt-8 grid gap-4 md:grid-cols-3">
-        <div class="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <div class="text-lg font-semibold">Single</div>
-          <p class="mt-2 text-sm text-slate-200">필요한 강의만 선택 구매</p>
-          <div class="mt-5 text-3xl font-semibold">₩29,000~</div>
-          <ul class="mt-5 space-y-2 text-sm text-slate-200">
-            <li>• 강의 단건 구매</li>
-            <li>• 영구 소장(정책에 따라)</li>
-            <li>• 기본 플레이어</li>
-          </ul>
-          <a href="#cta" class="mt-6 inline-flex w-full justify-center rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-semibold hover:bg-white/10">
-            강의 구매
-          </a>
-        </div>
-
-        <div class="rounded-3xl border border-white/10 bg-white p-6 text-slate-950 shadow-2xl">
-          <div class="flex items-center justify-between">
-            <div class="text-lg font-semibold">Pro (추천)</div>
-            <span class="rounded-full bg-slate-950 px-3 py-1 text-xs font-semibold text-white">7일 무료</span>
-          </div>
-          <p class="mt-2 text-sm text-slate-700">대부분의 수강생이 선택</p>
-          <div class="mt-5 text-3xl font-semibold">₩19,900<span class="text-base font-medium text-slate-700">/월</span></div>
-          <ul class="mt-5 space-y-2 text-sm text-slate-800">
-            <li>• 무제한 수강</li>
-            <li>• 자막/배속/구간반복</li>
-            <li>• 노트/검색/퀴즈</li>
-            <li>• 수료증 발급</li>
-          </ul>
-          <a href="#cta" class="mt-6 inline-flex w-full justify-center rounded-2xl bg-slate-950 px-5 py-3 font-semibold text-white hover:bg-slate-900">
-            Pro 시작하기
-          </a>
-        </div>
-
-        <div class="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <div class="text-lg font-semibold">Team</div>
-          <p class="mt-2 text-sm text-slate-200">조직 학습/온보딩 운영</p>
-          <div class="mt-5 text-3xl font-semibold">맞춤 견적</div>
-          <ul class="mt-5 space-y-2 text-sm text-slate-200">
-            <li>• 관리자 대시보드</li>
-            <li>• 팀 커리큘럼/과제</li>
-            <li>• 수강 리포트/완주율</li>
-            <li>• SSO/보안 옵션(선택)</li>
-          </ul>
-          <a href="#cta" class="mt-6 inline-flex w-full justify-center rounded-2xl border border-white/10 bg-white/5 px-5 py-3 font-semibold hover:bg-white/10">
-            팀 문의
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section id="faq" class="mx-auto max-w-6xl px-4 py-14">
-      <div>
-        <h2 class="text-2xl font-semibold tracking-tight md:text-3xl">자주 묻는 질문</h2>
-        <p class="mt-2 text-slate-200">도입 전에 가장 많이 확인하는 항목을 정리했습니다.</p>
-      </div>
-
-      <div class="mt-8 grid gap-4 md:grid-cols-2">
-        <details class="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <summary class="cursor-pointer text-base font-semibold">무료 체험은 어떻게 진행되나요?</summary>
-          <p class="mt-3 text-sm text-slate-200">
-            가입 후 7일 동안 Pro 기능을 동일하게 사용합니다. 체험 종료 전 해지하면 과금되지 않습니다.
-          </p>
-        </details>
-
-        <details class="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <summary class="cursor-pointer text-base font-semibold">강의는 모바일에서도 보기 편한가요?</summary>
-          <p class="mt-3 text-sm text-slate-200">
-            반응형 플레이어와 단축 기능(배속/자막/북마크)을 제공하며, 이어보기로 학습 흐름을 유지합니다.
-          </p>
-        </details>
-
-        <details class="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <summary class="cursor-pointer text-base font-semibold">환불/해지 정책은 어떻게 되나요?</summary>
-          <p class="mt-3 text-sm text-slate-200">
-            구독은 언제든 해지 가능하며, 결제 주기 종료까지 이용할 수 있습니다. 단건 구매 환불은 정책에 따릅니다.
-          </p>
-        </details>
-
-        <details class="rounded-3xl border border-white/10 bg-white/5 p-6">
-          <summary class="cursor-pointer text-base font-semibold">팀 플랜은 어떤 조직에 적합한가요?</summary>
-          <p class="mt-3 text-sm text-slate-200">
-            온보딩/직무 교육/사내 인증 체계를 운영하는 조직에 적합합니다. 커리큘럼 관리와 리포트를 제공합니다.
-          </p>
-        </details>
-      </div>
-    </section>
-
-    <!-- CTA -->
-    <section id="cta" class="mx-auto max-w-6xl px-4 pb-20">
-      <div class="rounded-3xl border border-white/10 bg-gradient-to-r from-white/10 to-white/5 p-8 md:p-10">
-        <div class="grid items-center gap-8 md:grid-cols-2">
-          <div>
-            <h2 class="text-2xl font-semibold tracking-tight md:text-3xl">오늘부터 학습을 ‘완주’로 바꾸세요</h2>
-            <p class="mt-2 text-slate-200">
-              무료 체험으로 플레이어/노트/퀴즈를 직접 확인해보세요. 팀 도입은 데모로 안내드립니다.
-            </p>
-            <ul class="mt-5 space-y-2 text-sm text-slate-200">
-              <li>• 7일 무료 체험</li>
-              <li>• 카드 등록 후 즉시 시작</li>
-              <li>• 체험 종료 전 해지 가능</li>
-            </ul>
-          </div>
-
-          <form class="rounded-3xl border border-white/10 bg-slate-950/40 p-6">
-            <label class="block text-sm font-semibold">이메일</label>
-            <input type="email" placeholder="name@company.com"
-              class="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-white/30" />
-            <label class="mt-4 block text-sm font-semibold">관심 분야</label>
-            <select class="mt-2 w-full rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-white/30">
-              <option>데이터/분석</option>
-              <option>기획/문서</option>
-              <option>개발/IT</option>
-              <option>제조/공정</option>
-              <option>자격/시험</option>
-            </select>
-            <button type="button"
-              class="mt-5 w-full rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-slate-100">
-              무료 체험 신청
-            </button>
-            <p class="mt-3 text-xs text-slate-300">
-              신청 시 이용약관/개인정보 처리방침에 동의한 것으로 간주됩니다.
-            </p>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="border-t border-white/10">
-      <div class="mx-auto max-w-6xl px-4 py-10">
-        <div class="grid gap-6 md:grid-cols-4">
-          <div>
-            <div class="text-lg font-semibold">VOD Academy</div>
-            <p class="mt-2 text-sm text-slate-300">실무형 VOD 학습 플랫폼</p>
-          </div>
-          <div class="text-sm text-slate-300">
-            <div class="font-semibold text-slate-200">제품</div>
-            <ul class="mt-3 space-y-2">
-              <li><a class="hover:text-white" href="#features">기능</a></li>
-              <li><a class="hover:text-white" href="#courses">강의</a></li>
-              <li><a class="hover:text-white" href="#pricing">가격</a></li>
-            </ul>
-          </div>
-          <div class="text-sm text-slate-300">
-            <div class="font-semibold text-slate-200">회사</div>
-            <ul class="mt-3 space-y-2">
-              <li><a class="hover:text-white" href="#">소개</a></li>
-              <li><a class="hover:text-white" href="#">채용</a></li>
-              <li><a class="hover:text-white" href="#">문의</a></li>
-            </ul>
-          </div>
-          <div class="text-sm text-slate-300">
-            <div class="font-semibold text-slate-200">지원</div>
-            <ul class="mt-3 space-y-2">
-              <li><a class="hover:text-white" href="#faq">FAQ</a></li>
-              <li><a class="hover:text-white" href="#">이용약관</a></li>
-              <li><a class="hover:text-white" href="#">개인정보 처리방침</a></li>
-            </ul>
           </div>
         </div>
+      </aside>
+    </div>
 
-        <div class="mt-10 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-slate-400 md:flex-row md:items-center md:justify-between">
-          <span>© <span id="year"></span> VOD Academy. All rights reserved.</span>
-          <span>사업자정보 · 통신판매업 · 고객센터 0000-0000</span>
+    <footer>
+      <div class="row">
+        <div style="display:flex; align-items:center; gap: 10px;">
+          <div class="logo" style="width:28px; height:28px; border-radius: 8px;">BH</div>
+          <div style="font-weight: 900; color:#0f172a; letter-spacing:-0.02em; text-transform: uppercase;">BIG HANDS INTELLIGENCE</div>
+        </div>
+        <div style="font-weight: 900; letter-spacing: 0.14em; text-transform: uppercase; font-size: 10px;">
+          Tracking Smart Money Movements via 13F Quantitative Analysis.
+        </div>
+        <div style="display:flex; gap: 16px;">
+          <a href="#">Disclaimer</a>
+          <a href="#">Contact</a>
         </div>
       </div>
     </footer>
   </main>
 
   <script>
-    const btn = document.getElementById('menuBtn');
-    const menu = document.getElementById('mobileMenu');
-    btn?.addEventListener('click', () => menu.classList.toggle('hidden'));
+  /**
+   * BIG HANDS Static UI — Real JSON Connector (Vercel-safe)
+   *
+   * 기대 파일:
+   *   top5_long.json
+   *   top5_short.json
+   *
+   * 가장 안전한 배치:
+   *   public/index.html
+   *   public/top5_long.json
+   *   public/top5_short.json
+   */
 
-    document.getElementById('year').textContent = new Date().getFullYear();
+  // ===== Data State =====
+  let STOCKS = [];
+  let META = {
+    long: { investors_used: 0 },
+    short: { investors_used: 0 },
+  };
+
+  // ===== UI State =====
+  let tradeType = "buy";       // 'buy' | 'sell'
+  let investorType = "all";    // 'all' | 'long' | 'short'
+  let selected = null;
+  let peMultiple = 0;
+
+  // ===== DOM =====
+  const rowsEl = document.getElementById("rows");
+  const searchEl = document.getElementById("search");
+
+  const btnBuy = document.getElementById("btnBuy");
+  const btnSell = document.getElementById("btnSell");
+  const fltAll = document.getElementById("fltAll");
+  const fltLong = document.getElementById("fltLong");
+  const fltShort = document.getElementById("fltShort");
+
+  const headline = document.getElementById("headline");
+
+  const panelWrap = document.getElementById("panelWrap");
+  const togglePanel = document.getElementById("togglePanel");
+  const closePanel = document.getElementById("closePanel");
+  const expandHint = document.getElementById("expandHint");
+
+  const pTicker = document.getElementById("pTicker");
+  const pTrend = document.getElementById("pTrend");
+  const gValue = document.getElementById("gValue");
+  const gGrowth = document.getElementById("gGrowth");
+  const pPrice = document.getElementById("pPrice");
+  const pUpside = document.getElementById("pUpside");
+  const pTarget = document.getElementById("pTarget");
+  const pPE = document.getElementById("pPE");
+  const peSlider = document.getElementById("peSlider");
+  const ctaBtn = document.getElementById("ctaBtn");
+  const holders = document.getElementById("holders");
+
+  const debugBox = document.getElementById("debugBox");
+  const debugText = document.getElementById("debugText");
+
+  // ===== Helpers =====
+  function debugLog(lines) {
+    // 필요하면 true로 바꿔서 배포 환경에서 경로 확인 가능
+    const ENABLE_DEBUG = false;
+    if (!ENABLE_DEBUG) return;
+    debugBox.style.display = "block";
+    debugText.innerHTML = lines.map(l => `<div>${escapeHtml(l)}</div>`).join("");
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, (m) => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"
+    }[m]));
+  }
+
+  function setTheme() {
+    if (tradeType === "buy") {
+      document.documentElement.style.setProperty("--themeDark", "#0F172A");
+      document.documentElement.style.setProperty("--themeAccent", "#ea580c");
+      document.documentElement.style.setProperty("--themeAccentSoft", "rgba(234, 88, 12, 0.10)");
+      ctaBtn.textContent = "Set Watchlist";
+    } else {
+      document.documentElement.style.setProperty("--themeDark", "#450A0A");
+      document.documentElement.style.setProperty("--themeAccent", "#e11d48");
+      document.documentElement.style.setProperty("--themeAccentSoft", "rgba(225, 29, 72, 0.10)");
+      ctaBtn.textContent = "Set Exit Point";
+    }
+  }
+
+  function ratingClass(value) {
+    if (!value) return "other";
+    if (value.startsWith("A")) return "a";
+    if (value.startsWith("B")) return "b";
+    return "other";
+  }
+
+  function fmtMoney(n) {
+    const x = Number(n);
+    if (!isFinite(x)) return "$0.00";
+    return "$" + x.toFixed(2);
+  }
+
+  function safeNumber(n, fallback = 0) {
+    const x = Number(n);
+    return isFinite(x) ? x : fallback;
+  }
+
+  function computeTarget(stock, pe) {
+    const eps = safeNumber(stock.eps, 0);
+    const cur = safeNumber(stock.currentPrice, 0);
+    const target = eps * safeNumber(pe, 0);
+    const upside = cur > 0 ? ((target - cur) / cur) * 100 : 0;
+    return { target, upside };
+  }
+
+  function renderLoading(msg = "Loading data...") {
+    rowsEl.innerHTML = `
+      <tr>
+        <td colspan="6" class="mono" style="padding:18px; color:#94a3b8; text-align:center;">
+          ${msg}
+        </td>
+      </tr>
+    `;
+  }
+
+  function renderError(msg) {
+    rowsEl.innerHTML = `
+      <tr>
+        <td colspan="6" class="mono" style="padding:18px; color:#e11d48; text-align:center;">
+          ${escapeHtml(msg)}
+        </td>
+      </tr>
+    `;
+  }
+
+  function renderHeadline() {
+    headline.textContent = `${tradeType.toUpperCase()} Momentum: ${investorType.toUpperCase()} Institutional Consensus`;
+  }
+
+  function syncButtons() {
+    btnBuy.classList.toggle("active", tradeType === "buy");
+    btnSell.classList.toggle("active", tradeType === "sell");
+
+    fltAll.classList.toggle("active", investorType === "all");
+    fltLong.classList.toggle("active", investorType === "long");
+    fltShort.classList.toggle("active", investorType === "short");
+  }
+
+  function filteredStocksRaw() {
+    const q = (searchEl.value || "").trim().toUpperCase();
+    return STOCKS
+      .filter((s) => s.action === tradeType)
+      .filter((s) => (investorType === "all" ? true : s.type === investorType))
+      .filter((s) => (q ? (String(s.ticker).includes(q) || String(s.name).toUpperCase().includes(q)) : true))
+      .slice(0, 5);
+  }
+
+  function pickFirstMatch() {
+    const list = filteredStocksRaw();
+    if (list.length > 0) {
+      selected = list[0];
+      peMultiple = safeNumber(selected.per, 0);
+      peSlider.value = String(peMultiple);
+      return;
+    }
+    selected = null;
+    peMultiple = 0;
+    peSlider.value = "0";
+  }
+
+  function renderTable() {
+    const list = filteredStocksRaw();
+    rowsEl.innerHTML = "";
+
+    if (list.length === 0) {
+      rowsEl.innerHTML = `
+        <tr>
+          <td colspan="6" class="mono" style="padding:18px; color:#94a3b8; text-align:center;">
+            No rows (check filters or JSON path).
+          </td>
+        </tr>
+      `;
+      return;
+    }
+
+    list.forEach((stock, idx) => {
+      const tr = document.createElement("tr");
+      if (selected && selected.ticker === stock.ticker) tr.classList.add("selected");
+
+      tr.addEventListener("click", () => {
+        selected = stock;
+        peMultiple = safeNumber(selected.per, 0);
+        peSlider.value = String(peMultiple);
+        renderAll();
+      });
+
+      const tdRank = document.createElement("td");
+      tdRank.className = "rank mono";
+      tdRank.textContent = String(idx + 1);
+
+      const tdSym = document.createElement("td");
+      tdSym.innerHTML = `
+        <div>
+          <div style="display:flex; align-items:center; gap: 8px;">
+            <span class="ticker">${escapeHtml(stock.ticker)}</span>
+            <span class="pill ${stock.type === "long" ? "long" : "short"}">${stock.type === "long" ? "L" : "S"}</span>
+          </div>
+          <div class="name">${escapeHtml(stock.name)}</div>
+        </div>
+      `;
+
+      const tdAct = document.createElement("td");
+      tdAct.innerHTML = `
+        <div class="holders">
+          <span class="mono" style="font-weight:900; color:#475569;">${safeNumber(stock.holders, 0)}</span>
+          <span class="delta mono">
+            <span class="up">+${safeNumber(stock.newHolders, 0)}</span>
+            <span style="margin:0 6px; color:#cbd5e1;">/</span>
+            <span class="down">-${safeNumber(stock.exitHolders, 0)}</span>
+          </span>
+        </div>
+      `;
+
+      const tdAvg = document.createElement("td");
+      tdAvg.className = "mono";
+      tdAvg.style.textAlign = "center";
+      tdAvg.style.color = "#94a3b8";
+      tdAvg.textContent = fmtMoney(stock.avgCost);
+
+      const tdFair = document.createElement("td");
+      tdFair.className = "mono";
+      tdFair.style.textAlign = "center";
+      tdFair.style.color = "rgba(37,99,235,0.75)";
+      tdFair.textContent = fmtMoney(stock.fairValue);
+
+      const tdRate = document.createElement("td");
+      tdRate.style.textAlign = "center";
+      const r = document.createElement("div");
+      const cls = ratingClass(stock.grade?.value);
+      r.className = `rating ${cls}`;
+      r.textContent = stock.grade?.value || "-";
+      tdRate.appendChild(r);
+
+      tr.appendChild(tdRank);
+      tr.appendChild(tdSym);
+      tr.appendChild(tdAct);
+      tr.appendChild(tdAvg);
+      tr.appendChild(tdFair);
+      tr.appendChild(tdRate);
+
+      rowsEl.appendChild(tr);
+    });
+  }
+
+  function renderPanel() {
+    if (!selected) {
+      pTicker.textContent = "No Selection";
+      pTrend.textContent = "—";
+      gValue.textContent = "-";
+      gGrowth.textContent = "-";
+      pPE.textContent = "0.0x";
+      pPrice.textContent = "$0.00";
+      pTarget.textContent = "$0.00";
+      pUpside.className = "badge mono";
+      pUpside.textContent = "▲ 0.0%";
+      holders.innerHTML = "";
+      return;
+    }
+
+    pTicker.textContent = `${selected.ticker} Analyst`;
+    pTrend.textContent = `${selected.trend} Consensus`;
+    gValue.textContent = selected.grade?.value ?? "-";
+    gGrowth.textContent = selected.grade?.growth ?? "-";
+
+    pPE.textContent = `${Number(peMultiple).toFixed(1)}x`;
+    pPrice.textContent = fmtMoney(selected.currentPrice);
+
+    const { target, upside } = computeTarget(selected, peMultiple);
+    pTarget.textContent = fmtMoney(target);
+
+    const isUp = upside >= 0;
+    pUpside.className = `badge mono ${isUp ? "good" : "bad"}`;
+    pUpside.textContent = `${isUp ? "▲" : "▼"} ${Math.abs(upside).toFixed(1)}%`;
+
+    holders.innerHTML = "";
+    (selected.topHolders || []).forEach((h) => {
+      const item = document.createElement("div");
+      item.className = "holderItem";
+
+      const left = document.createElement("div");
+      left.innerHTML = `
+        <div class="holderName">${escapeHtml(h.name)}</div>
+        <div class="holderType ${h.type === "Long" ? "tLong" : "tShort"}">${escapeHtml(h.type)}</div>
+      `;
+
+      const st = document.createElement("div");
+      const map = { New: "stNew", Increased: "stInc", Decreased: "stDec", Maintained: "stMaint" };
+      st.className = `status ${map[h.status] || "stMaint"}`;
+      st.textContent = h.status;
+
+      item.appendChild(left);
+      item.appendChild(st);
+      holders.appendChild(item);
+    });
+  }
+
+  function ensureSelectionVisible() {
+    const list = filteredStocksRaw();
+    if (!selected) {
+      pickFirstMatch();
+      return;
+    }
+    const exists = list.some((s) => s.ticker === selected.ticker);
+    if (!exists) pickFirstMatch();
+  }
+
+  function renderAll() {
+    setTheme();
+    syncButtons();
+    renderHeadline();
+    ensureSelectionVisible();
+    renderTable();
+    renderPanel();
+  }
+
+  // ===== Robust JSON Loader (Vercel-safe) =====
+  function getDirBase() {
+    // 현재 페이지가 /a/b/index.html 이면 /a/b/ 를 base로 사용
+    const p = window.location.pathname || "/";
+    const base = p.endsWith("/") ? p : p.replace(/\/[^\/]*$/, "/");
+    return base;
+  }
+
+  async function fetchJsonTry(url) {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error(`Failed to load ${url} (HTTP ${res.status})`);
+    return await res.json();
+  }
+
+  async function fetchJsonWithFallback(fileName) {
+    const base = getDirBase();
+
+    // 우선순위: 같은 폴더 -> 한 단계 위 -> 루트
+    const candidates = [
+      base + fileName,          // (권장) index.html과 같은 폴더
+      base + "../" + fileName,  // 혹시 index.html이 하위 폴더에 있는 경우
+      "/" + fileName,           // 도메인 루트
+      "./" + fileName,          // 상대경로(브라우저가 알아서 처리)
+    ];
+
+    debugLog([
+      "pathname: " + window.location.pathname,
+      "base: " + base,
+      "try: " + candidates.join(" | "),
+    ]);
+
+    let lastErr = null;
+    for (const url of candidates) {
+      try {
+        return await fetchJsonTry(url);
+      } catch (e) {
+        lastErr = e;
+      }
+    }
+    throw lastErr || new Error(`Failed to load ${fileName}`);
+  }
+
+  /**
+   * tradeType / investorType 에 따라 STOCKS 재구성
+   */
+  async function loadDataAndBuildStocks() {
+    renderLoading("Loading JSON...");
+
+    try {
+      let longJson = null;
+      let shortJson = null;
+
+      if (investorType === "long" || investorType === "all") {
+        longJson = await fetchJsonWithFallback("top5_long.json");
+        META.long.investors_used = safeNumber(longJson.investors_used, 0);
+      }
+      if (investorType === "short" || investorType === "all") {
+        shortJson = await fetchJsonWithFallback("top5_short.json");
+        META.short.investors_used = safeNumber(shortJson.investors_used, 0);
+      }
+
+      const pickList = (json) => {
+        if (!json) return [];
+        if (tradeType === "buy") return json.top5_new_buyers || [];
+        return json.top5_sellers || [];
+      };
+
+      const longList = pickList(longJson).map((r) => ({ ...r, __type: "long" }));
+      const shortList = pickList(shortJson).map((r) => ({ ...r, __type: "short" }));
+
+      let merged = [];
+      if (investorType === "long") merged = longList;
+      else if (investorType === "short") merged = shortList;
+      else merged = [...longList, ...shortList];
+
+      const metric = tradeType === "buy" ? "new_buyers" : "sellers";
+      merged.sort((a, b) => safeNumber(b[metric], 0) - safeNumber(a[metric], 0));
+      merged = merged.slice(0, 5);
+
+      STOCKS = merged.map((row) => {
+        const type = row.__type;
+
+        const holdersCount =
+          safeNumber(row.holders, NaN);
+        const finalHolders = isNaN(holdersCount)
+          ? safeNumber(row.new_buyers, 0) + safeNumber(row.sellers, 0)
+          : safeNumber(row.holders, 0);
+
+        // ticker가 없으면 cusip를 임시 키로 사용(깨지지 않게)
+        const ticker = String(row.ticker || row.cusip || "—").trim();
+        const name = String(row.name || row.issuer || "—").trim();
+
+        const newH = tradeType === "buy" ? safeNumber(row.new_buyers, 0) : 0;
+
+        return {
+          ticker,
+          name,
+          type,                 // 'long' | 'short'
+          action: tradeType,    // 'buy' | 'sell'
+
+          holders: finalHolders,
+          newHolders: newH,
+          exitHolders: safeNumber(row.sellers, 0),
+
+          avgCost: 0,
+          currentPrice: 0,
+          fairValue: 0,
+
+          eps: 0,
+          per: 0,
+
+          grade: { value: "-", growth: "-", momentum: "-" },
+          trend: tradeType === "buy" ? "Institutional Buy" : "Institutional Sell",
+          topHolders: []
+        };
+      });
+
+      pickFirstMatch();
+      renderAll();
+    } catch (e) {
+      console.error(e);
+      renderError(String(e && e.message ? e.message : e));
+      selected = null;
+      peMultiple = 0;
+      renderPanel();
+    }
+  }
+
+  // ===== Events =====
+  btnBuy.addEventListener("click", async () => {
+    tradeType = "buy";
+    await loadDataAndBuildStocks();
+  });
+  btnSell.addEventListener("click", async () => {
+    tradeType = "sell";
+    await loadDataAndBuildStocks();
+  });
+
+  fltAll.addEventListener("click", async () => {
+    investorType = "all";
+    await loadDataAndBuildStocks();
+  });
+  fltLong.addEventListener("click", async () => {
+    investorType = "long";
+    await loadDataAndBuildStocks();
+  });
+  fltShort.addEventListener("click", async () => {
+    investorType = "short";
+    await loadDataAndBuildStocks();
+  });
+
+  searchEl.addEventListener("input", () => {
+    pickFirstMatch();
+    renderAll();
+  });
+
+  peSlider.addEventListener("input", (e) => {
+    peMultiple = Number(e.target.value);
+    pPE.textContent = `${Number(peMultiple).toFixed(1)}x`;
+    renderPanel();
+  });
+
+  togglePanel.addEventListener("click", () => {
+    panelWrap.classList.toggle("hide");
+  });
+  closePanel.addEventListener("click", () => {
+    panelWrap.classList.add("hide");
+  });
+  expandHint.addEventListener("click", () => {
+    panelWrap.classList.remove("hide");
+    panelWrap.scrollIntoView({ behavior: "smooth", block: "start" });
+  });
+
+  // ===== init =====
+  (async function init() {
+    setTheme();
+    syncButtons();
+    await loadDataAndBuildStocks();
+  })();
   </script>
 </body>
 </html>
